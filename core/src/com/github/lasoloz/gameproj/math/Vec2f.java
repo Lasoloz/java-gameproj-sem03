@@ -61,4 +61,32 @@ public class Vec2f {
     public float getY() {
         return y;
     }
+
+
+    public float distSq(Vec2f other) {
+        float dx = x - other.x;
+        float dy = y - other.y;
+
+        return dx * dx + dy * dy;
+    }
+
+
+    public float dist(Vec2f other) {
+        return (float) Math.sqrt(distSq(other));
+    }
+
+
+    public float absSq() {
+        return x * x + y * y;
+    }
+
+    public float abs() {
+        return (float) Math.sqrt(absSq());
+    }
+
+
+    public void scale(float ratio) {
+        x *= ratio;
+        y *= ratio;
+    }
 }
