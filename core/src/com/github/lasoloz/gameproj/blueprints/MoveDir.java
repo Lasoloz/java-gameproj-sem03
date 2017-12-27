@@ -10,7 +10,7 @@ public enum MoveDir {
     MoveDir(int dirIndex) {
         index = dirIndex;
     }
-    int getIndexValue() {
+    public int getIndexValue() {
         return index;
     }
 }

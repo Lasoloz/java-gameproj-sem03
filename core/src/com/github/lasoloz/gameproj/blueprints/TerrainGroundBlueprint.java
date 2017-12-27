@@ -4,13 +4,13 @@ import com.github.lasoloz.gameproj.graphics.Drawable;
 
 import static com.github.lasoloz.gameproj.blueprints.MoveDir.DIR_COUNT;
 
-public class TerrainTileBlueprint {
+public class TerrainGroundBlueprint {
     private Drawable ground; // Top of the terrain element
     private Drawable wall;   // The wall of the terrain element
 
     private int[] boundModifiers;
 
-    public TerrainTileBlueprint(
+    public TerrainGroundBlueprint(
             Drawable ground,
             Drawable wall,
             int[] boundModifiers
