@@ -2,11 +2,12 @@ package com.github.lasoloz.gameproj.graphics;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.utils.Disposable;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 
-public class TerrainAssets {
+public class TerrainAssets implements Disposable {
     private TerrainSet terrainSet;
     private TerrainSet terrainSetAlt;
 
@@ -58,5 +59,11 @@ public class TerrainAssets {
 
     public TerrainSet getTerrainSetAlt() {
         return terrainSetAlt;
+    }
+
+    @Override
+    public void dispose() {
+        terrainSet.dispose();
+        terrainSetAlt.dispose();
     }
 }

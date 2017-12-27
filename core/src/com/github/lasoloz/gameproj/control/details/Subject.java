@@ -3,8 +3,8 @@ package com.github.lasoloz.gameproj.control.details;
 import java.util.LinkedList;
 
 public abstract class Subject {
-    LinkedList<Observer> observers;
-    GameState gameState;
+    private LinkedList<Observer> observers;
+    protected GameState gameState;
 
     public Subject(GameState gameState) {
         observers = new LinkedList<Observer>();
@@ -20,7 +20,7 @@ public abstract class Subject {
         observers.remove(observer);
     }
 
-    public void notify(Observer observer) {
+    public void update() {
         for (Observer o : observers) {
             o.update(gameState);
         }

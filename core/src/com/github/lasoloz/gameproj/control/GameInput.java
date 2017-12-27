@@ -4,8 +4,9 @@ import com.badlogic.gdx.InputProcessor;
 import com.github.lasoloz.gameproj.math.Vec2f;
 
 public class GameInput implements InputProcessor {
-    int mouseX, mouseY;
-    Vec2f relPoint = new Vec2f(0f, 0f);
+    private int mouseX, mouseY;
+    private int scrollState;
+    private Vec2f relPoint = new Vec2f(0f, 0f);
 
     @Override
     public boolean keyDown(int keycode) {
@@ -46,6 +47,7 @@ public class GameInput implements InputProcessor {
 
     @Override
     public boolean scrolled(int amount) {
+        scrollState += amount;
         return false;
     }
 
@@ -69,6 +71,10 @@ public class GameInput implements InputProcessor {
                 (pPosX + oPosX) / 2f,
                 (pPosY + oPosY) / 2f
         );
+    }
+
+    public int getScrollState() {
+        return scrollState;
     }
 
     /**

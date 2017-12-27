@@ -1,9 +1,10 @@
 package com.github.lasoloz.gameproj.graphics;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Disposable;
 import com.github.lasoloz.gameproj.math.Vec2f;
 
-public class TerrainSet {
+public class TerrainSet implements Disposable {
     public static final int TERRAIN_COUNT = 4;
 
     public static final int GROUND_TYPE = 0;
@@ -71,5 +72,13 @@ public class TerrainSet {
             float deltaTime
     ) {
         which.draw(batch, pos.getX(), pos.getY(), deltaTime);
+    }
+
+    @Override
+    public void dispose() {
+        groundType.dispose();
+        wallType.dispose();
+        voidType.dispose();
+        voidNType.dispose();
     }
 }
