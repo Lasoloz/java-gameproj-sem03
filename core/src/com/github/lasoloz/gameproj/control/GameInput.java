@@ -5,7 +5,8 @@ import com.github.lasoloz.gameproj.math.Vec2f;
 
 public class GameInput implements InputProcessor {
     private int mouseX, mouseY;
-    private int scrollState;
+    private int lastScrollState = 0;
+    private int scrollState = 0;
     private Vec2f relPoint = new Vec2f(0f, 0f);
 
     @Override
@@ -47,34 +48,41 @@ public class GameInput implements InputProcessor {
 
     @Override
     public boolean scrolled(int amount) {
+        lastScrollState = scrollState;
         scrollState += amount;
-        return false;
+        return true;
     }
 
 
     public Vec2f getCameraFocus(
             Vec2f playerPos,
-            Vec2f screenSize
+            Vec2f screenSize,
+            int displayDiv
     ) {
         float pPosX = playerPos.getX();
         float pPosY = playerPos.getY();
-        float deltaX = (mouseX - screenSize.getX() / 2) / 4;
-        float deltaY = (screenSize.getY() / 2 - mouseY) / 4;
-        float oPosX = pPosX + deltaX;
-        float oPosY = pPosY + deltaY;
+        float deltaX = (mouseX - screenSize.getX() / 2) / displayDiv;
+        float deltaY = (screenSize.getY() / 2 - mouseY) / displayDiv;
+        if (displayDiv > 2) {
+            float oPosX = pPosX + deltaX;
+            float oPosY = pPosY + deltaY;
 
-        // Set relative mouse coordinates:
-        relPoint.setX(oPosX);
-        relPoint.setY(oPosY);
+            // Set relative mouse coordinates:
+            relPoint.setX(oPosX + deltaX / 2);
+            relPoint.setY(oPosY + deltaY / 2);
 
-        return new Vec2f(
-                (pPosX + oPosX) / 2f,
-                (pPosY + oPosY) / 2f
-        );
-    }
-
-    public int getScrollState() {
-        return scrollState;
+            return new Vec2f(
+                    (pPosX + oPosX) / 2f,
+                    (pPosY + oPosY) / 2f
+            );
+        } else {
+            relPoint.setX(pPosX + deltaX);
+            relPoint.setY(pPosY + deltaY);
+            return new Vec2f(
+                    pPosX,
+                    pPosY
+            );
+        }
     }
 
     /**
@@ -83,5 +91,11 @@ public class GameInput implements InputProcessor {
      */
     public Vec2f getRelativeMouseCoord() {
         return relPoint;
+    }
+
+    public int getScrollState() {
+        int state = scrollState - lastScrollState;
+        lastScrollState = scrollState;
+        return state;
     }
 }

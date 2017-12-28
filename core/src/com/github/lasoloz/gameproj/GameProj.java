@@ -3,6 +3,7 @@ package com.github.lasoloz.gameproj;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.GL30;
 import com.github.lasoloz.gameproj.control.FieldRenderer;
 import com.github.lasoloz.gameproj.control.GameController;
 import com.github.lasoloz.gameproj.control.details.GameState;
