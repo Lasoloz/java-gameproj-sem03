@@ -11,6 +11,8 @@ import com.github.lasoloz.gameproj.math.Vec2f;
 public class GameState implements Disposable {
     public final static Vec2f gridSize = new Vec2f(28f, 16f);
 
+    private GameMap map;
+
     private OrthographicCamera camera;
     private GameInput input;
     private Vec2f playerPos;
@@ -20,6 +22,7 @@ public class GameState implements Disposable {
     private long time;
     private long displayDivChangeTime;
     private TerrainAssets terrainAssets;
+
 
 
     public GameState(
@@ -36,6 +39,8 @@ public class GameState implements Disposable {
         input = new GameInput();
         time = 0;
         displayDivChangeTime = 0;
+
+        map = new GameMap();
     }
 
     public OrthographicCamera getCamera() {
@@ -93,6 +98,23 @@ public class GameState implements Disposable {
             createCamera();
             displayDivChangeTime = time;
         }
+    }
+
+
+    public boolean loadMap(String mapFileName) {
+        return map.loadMap(mapFileName);
+    }
+
+    public GameMap getMap() {
+        return map;
+    }
+
+    public float getMapWidth() {
+        return gridSize.getX() * map.getWidth();
+    }
+
+    public float getMapHeight() {
+        return gridSize.getY() * map.getHeight();
     }
 
 

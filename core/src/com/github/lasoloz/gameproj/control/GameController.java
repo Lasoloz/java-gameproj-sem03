@@ -16,13 +16,14 @@ public class GameController extends Subject {
     @Override
     public void update() {
         gameState.updateTime();
+        movePlayer();
+//        System.out.println(gameState.getPlayerPos());
         int scrollState = gameState.getInput().getScrollState();
         if (scrollState < 0) {
             gameState.incrementDisplayDiv();
         } else if (scrollState > 0) {
             gameState.decrementDisplayDiv();
         }
-        gameState.getCamera().update();
         updateCamera();
         super.update();
     }
@@ -49,5 +50,12 @@ public class GameController extends Subject {
         OrthographicCamera camera = gameState.getCamera();
         camera.position.x = f.getX();
         camera.position.y = f.getY();
+        camera.update();
+    }
+
+
+    private void movePlayer() {
+        Vec2f pPos = gameState.getPlayerPos();
+        pPos.addTo(gameState.getInput().getInputVector());
     }
 }

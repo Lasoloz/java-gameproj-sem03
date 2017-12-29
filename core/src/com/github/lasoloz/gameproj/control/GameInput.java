@@ -1,5 +1,6 @@
 package com.github.lasoloz.gameproj.control;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.github.lasoloz.gameproj.math.Vec2f;
 
@@ -8,14 +9,46 @@ public class GameInput implements InputProcessor {
     private int lastScrollState = 0;
     private int scrollState = 0;
     private Vec2f relPoint = new Vec2f(0f, 0f);
+    private Vec2f inputVector = new Vec2f(0f, 0f);
+    private boolean gridState = false;
 
     @Override
     public boolean keyDown(int keycode) {
+        if (keycode == Input.Keys.UP || keycode == Input.Keys.W) {
+            inputVector.addToY( 3f);
+            return true;
+        } else if (keycode == Input.Keys.RIGHT || keycode == Input.Keys.D) {
+            inputVector.addToX( 3f);
+            return true;
+        } else if (keycode == Input.Keys.DOWN || keycode == Input.Keys.S) {
+            inputVector.addToY(-3f);
+            return true;
+        } else if (keycode == Input.Keys.LEFT || keycode == Input.Keys.A) {
+            inputVector.addToX(-3f);
+            return true;
+        } else if (keycode == Input.Keys.G) {
+            gridState = !gridState;
+        }
+
         return false;
     }
 
     @Override
     public boolean keyUp(int keycode) {
+        if (keycode == Input.Keys.UP || keycode == Input.Keys.W) {
+            inputVector.addToY(-3f);
+            return true;
+        } else if (keycode == Input.Keys.RIGHT || keycode == Input.Keys.D) {
+            inputVector.addToX(-3f);
+            return true;
+        } else if (keycode == Input.Keys.DOWN || keycode == Input.Keys.S) {
+            inputVector.addToY( 3f);
+            return true;
+        } else if (keycode == Input.Keys.LEFT || keycode == Input.Keys.A) {
+            inputVector.addToX( 3f);
+            return true;
+        }
+
         return false;
     }
 
@@ -36,6 +69,8 @@ public class GameInput implements InputProcessor {
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
+        mouseX = screenX;
+        mouseY = screenY;
         return false;
     }
 
@@ -97,5 +132,13 @@ public class GameInput implements InputProcessor {
         int state = scrollState - lastScrollState;
         lastScrollState = scrollState;
         return state;
+    }
+
+    public Vec2f getInputVector() {
+        return inputVector;
+    }
+
+    public boolean getGridState() {
+        return gridState;
     }
 }

@@ -3,7 +3,6 @@ package com.github.lasoloz.gameproj;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.GL30;
 import com.github.lasoloz.gameproj.control.FieldRenderer;
 import com.github.lasoloz.gameproj.control.GameController;
 import com.github.lasoloz.gameproj.control.details.GameState;
@@ -24,6 +23,10 @@ public class GameProj extends ApplicationAdapter {
                     4,
                     "dirt.terrain"
             );
+            if (!gameState.loadMap("dungeon0.map")) {
+                Gdx.app.error("GameProj", "Failed to load map!");
+                Gdx.app.exit();
+            }
             gameController = new GameController(gameState);
             fieldRenderer = new FieldRenderer();
 

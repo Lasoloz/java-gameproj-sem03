@@ -89,4 +89,9 @@ public class Vec2f {
         x *= ratio;
         y *= ratio;
     }
+
+    @Override
+    public String toString() {
+        return "{x: " + x + ", " + y + "}";
+    }
 }
