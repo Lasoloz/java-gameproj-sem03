@@ -7,15 +7,16 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class AnimationWrapper implements Drawable {
     private Animation<TextureRegion> animation;
-    private TextureAtlas atlas;
 
-    public AnimationWrapper(Animation animation) {
-        this.animation = animation;
-    }
-
-    public AnimationWrapper(String assetPath) {
-        atlas = new TextureAtlas(assetPath);
-        animation = new Animation(1/60f, atlas.getRegions());
+    public AnimationWrapper(
+            TextureAtlas atlas,
+            String atlasRegionName,
+            float frameDuration
+    ) {
+        animation = new Animation<TextureRegion>(
+                frameDuration,
+                atlas.findRegions(atlasRegionName)
+        );
     }
 
     @Override
@@ -39,12 +40,5 @@ public class AnimationWrapper implements Drawable {
                 width,
                 height
         );
-    }
-
-    @Override
-    public void dispose() {
-        if (atlas != null) {
-            atlas.dispose();
-        }
     }
 }

@@ -1,0 +1,48 @@
+
+pack.png
+size: 32,128
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+misc/torch/sprite
+  rotate: false
+  xy: 2, 92
+  size: 28, 16
+  orig: 28, 16
+  offset: 0, 0
+  index: 0
+misc/torch/sprite
+  rotate: false
+  xy: 2, 74
+  size: 28, 16
+  orig: 28, 16
+  offset: 0, 0
+  index: 1
+misc/torch/sprite
+  rotate: false
+  xy: 2, 56
+  size: 28, 16
+  orig: 28, 16
+  offset: 0, 0
+  index: 2
+misc/torch/sprite
+  rotate: false
+  xy: 2, 38
+  size: 28, 16
+  orig: 28, 16
+  offset: 0, 0
+  index: 3
+misc/torch/sprite
+  rotate: false
+  xy: 2, 20
+  size: 28, 16
+  orig: 28, 16
+  offset: 0, 0
+  index: 4
+misc/torch/sprite
+  rotate: false
+  xy: 2, 2
+  size: 28, 16
+  orig: 28, 16
+  offset: 0, 0
+  index: 5

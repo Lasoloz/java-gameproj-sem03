@@ -35,8 +35,8 @@ public class TextureWrapper implements Drawable {
         batch.draw(texture, posX, posY, width, height);
     }
 
-    @Override
-    public void dispose() {
-        texture.dispose();
-    }
+//    @Override
+//    public void dispose() {
+//        texture.dispose();
+//    }
 }

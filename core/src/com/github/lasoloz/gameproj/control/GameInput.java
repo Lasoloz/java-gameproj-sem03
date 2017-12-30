@@ -120,10 +120,6 @@ public class GameInput implements InputProcessor {
         }
     }
 
-    /**
-     * Returns the points relative to the player's position
-     * @return
-     */
     public Vec2f getRelativeMouseCoord() {
         return relPoint;
     }

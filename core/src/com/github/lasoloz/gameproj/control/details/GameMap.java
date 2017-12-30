@@ -2,13 +2,9 @@ package com.github.lasoloz.gameproj.control.details;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.github.lasoloz.gameproj.blueprints.BlueprintException;
-import com.github.lasoloz.gameproj.blueprints.TerrainGroundBlueprint;
-import com.github.lasoloz.gameproj.graphics.AssetBundle;
-import com.github.lasoloz.gameproj.graphics.Drawable;
 
-import java.io.*;
-import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.IOException;
 
 public class GameMap {
     private int[][] map;
@@ -34,7 +30,6 @@ public class GameMap {
         BufferedReader br = mapFile.reader(256);
 
         try {
-            String tileSet = br.readLine();
             String dataType = br.readLine();
 
             if (dataType == null) {

@@ -13,6 +13,4 @@ public interface Drawable {
             float height,
             float deltaTime
     );
-
-    void dispose();
 }

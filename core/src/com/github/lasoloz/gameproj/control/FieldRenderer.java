@@ -11,12 +11,13 @@ import com.badlogic.gdx.utils.Disposable;
 import com.github.lasoloz.gameproj.control.details.GameMap;
 import com.github.lasoloz.gameproj.control.details.GameState;
 import com.github.lasoloz.gameproj.control.details.Observer;
+import com.github.lasoloz.gameproj.graphics.TerrainCollection;
 import com.github.lasoloz.gameproj.graphics.TerrainSet;
 import com.github.lasoloz.gameproj.math.Vec2f;
 
 public class FieldRenderer implements Observer, Disposable {
-    SpriteBatch spriteBatch;
-    ShapeRenderer shapeRenderer;
+    private SpriteBatch spriteBatch;
+    private ShapeRenderer shapeRenderer;
 
     public FieldRenderer() {
         spriteBatch = new SpriteBatch();
@@ -44,16 +45,14 @@ public class FieldRenderer implements Observer, Disposable {
 
         float time = gameState.getStateTime();
 
-        TerrainSet mainTs = gameState.getTerrainAssets().getTerrainSet();
-        TerrainSet altTs = gameState.getTerrainAssets().getTerrainSetAlt();
-        TerrainSet current;
+        TerrainCollection terrainCollection = gameState.getTerrainCollection();
 
         Vec2f topLeft = new Vec2f(0, (height - 1) * GameState.gridSize.getY());
         Vec2f iter = topLeft.copy();
 
         for (int i = 0; i < height; ++i) {
             for (int j = 0; j < width; ++j) {
-                current = ((j + i) % 3 == 0) ? altTs : mainTs;
+                TerrainSet current = terrainCollection.getSet(i + 3*j);
                 int data = map.getData(j, i);
 
                 switch (data) {
@@ -79,7 +78,7 @@ public class FieldRenderer implements Observer, Disposable {
                         }
                         break;
                     default:
-                        // Do nothing...
+                        // Do nothing... Reformat this, please (myself)!
                 }
 
                 iter.addToX(GameState.gridSize.getX());
@@ -161,8 +160,8 @@ public class FieldRenderer implements Observer, Disposable {
         shapeRenderer.rect(
                 bottomLeft.x,
                 bottomLeft.y,
-                gameState.gridSize.getX(),
-                gameState.gridSize.getY()
+                GameState.gridSize.getX(),
+                GameState.gridSize.getY()
         );
         shapeRenderer.end();
     }

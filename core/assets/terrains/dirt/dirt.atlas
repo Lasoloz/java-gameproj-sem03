@@ -1,0 +1,62 @@
+
+dirt.png
+size: 256,32
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+mvoidn
+  rotate: false
+  xy: 2, 2
+  size: 28, 26
+  orig: 28, 26
+  offset: 0, 0
+  index: -1
+avoidn
+  rotate: false
+  xy: 32, 2
+  size: 28, 26
+  orig: 28, 26
+  offset: 0, 0
+  index: -1
+mvoid
+  rotate: false
+  xy: 182, 12
+  size: 28, 16
+  orig: 28, 16
+  offset: 0, 0
+  index: -1
+avoid
+  rotate: false
+  xy: 212, 12
+  size: 28, 16
+  orig: 28, 16
+  offset: 0, 0
+  index: -1
+mwall
+  rotate: false
+  xy: 62, 2
+  size: 28, 26
+  orig: 28, 26
+  offset: 0, 0
+  index: -1
+awall
+  rotate: false
+  xy: 92, 2
+  size: 28, 26
+  orig: 28, 26
+  offset: 0, 0
+  index: -1
+mground
+  rotate: false
+  xy: 122, 12
+  size: 28, 16
+  orig: 28, 16
+  offset: 0, 0
+  index: -1
+aground
+  rotate: false
+  xy: 152, 12
+  size: 28, 16
+  orig: 28, 16
+  offset: 0, 0
+  index: -1

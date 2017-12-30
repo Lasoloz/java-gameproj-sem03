@@ -1,10 +1,11 @@
 package com.github.lasoloz.gameproj.graphics;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.github.lasoloz.gameproj.math.Vec2f;
 
-public class TerrainSet implements Disposable {
+public class TerrainSet {
     public static final int TERRAIN_COUNT = 4;
 
     public static final int GROUND_TYPE = 0;
@@ -19,29 +20,25 @@ public class TerrainSet implements Disposable {
 
 
     public TerrainSet(
-            Drawable groundType,
-            Drawable wallType,
-            Drawable voidType,
-            Drawable voidNType
-            ) {
-        this.groundType = groundType;
-        this.voidType = voidType;
-        this.voidNType = voidNType;
-        this.wallType = wallType;
+            TextureAtlas atlas, String prefix
+    ) throws GraphicsException {
+        groundType = new SpriteWrapper(checkRegion(atlas, prefix + "ground"));
+        wallType = new SpriteWrapper(checkRegion(atlas, prefix + "wall"));
+        voidType = new SpriteWrapper(checkRegion(atlas, prefix + "void"));
+        voidNType = new SpriteWrapper(checkRegion(atlas, prefix + "voidn"));
     }
 
-    public TerrainSet(Drawable[] terrains) throws GraphicsException {
-        if (terrains.length < TERRAIN_COUNT) {
+    private TextureRegion checkRegion(
+            TextureAtlas atlas, String name
+    ) throws GraphicsException {
+        TextureRegion region = atlas.findRegion(name);
+        if (region == null) {
             throw new GraphicsException(
                     "TerrainSet",
-                    "You must supply at least 4 enough `Drawable`'s!"
+                    "Region `" + region + "` does not exist!"
             );
         }
-
-        this.groundType = terrains[0];
-        this.wallType = terrains[1];
-        this.voidType = terrains[2];
-        this.voidNType = terrains[3];
+        return region;
     }
 
 
@@ -72,13 +69,5 @@ public class TerrainSet implements Disposable {
             float deltaTime
     ) {
         which.draw(batch, pos.getX(), pos.getY(), deltaTime);
-    }
-
-    @Override
-    public void dispose() {
-        groundType.dispose();
-        wallType.dispose();
-        voidType.dispose();
-        voidNType.dispose();
     }
 }

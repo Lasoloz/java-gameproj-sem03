@@ -21,7 +21,7 @@ public class GameProj extends ApplicationAdapter {
             gameState = new GameState(
                     new Vec2f(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()),
                     4,
-                    "dirt.terrain"
+                    "terrains/dirt.terrain"
             );
             if (!gameState.loadMap("dungeon0.map")) {
                 Gdx.app.error("GameProj", "Failed to load map!");
@@ -34,7 +34,7 @@ public class GameProj extends ApplicationAdapter {
         } catch (GraphicsException ex) {
             Gdx.app.error(
                     "GameProj",
-                    "Failed to load default terrain assets!"
+                    ex.getMessage()
             );
             Gdx.app.exit();
         }

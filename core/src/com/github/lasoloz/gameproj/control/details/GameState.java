@@ -5,7 +5,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.github.lasoloz.gameproj.control.GameInput;
 import com.github.lasoloz.gameproj.graphics.GraphicsException;
-import com.github.lasoloz.gameproj.graphics.TerrainAssets;
+import com.github.lasoloz.gameproj.graphics.TerrainCollection;
 import com.github.lasoloz.gameproj.math.Vec2f;
 
 public class GameState implements Disposable {
@@ -21,16 +21,16 @@ public class GameState implements Disposable {
 
     private long time;
     private long displayDivChangeTime;
-    private TerrainAssets terrainAssets;
+    private TerrainCollection terrainCollection;
 
 
 
     public GameState(
             Vec2f screenSize,
             int displayDiv,
-            String currentTerrainAssetPath) throws GraphicsException {
+            String currentTerrainCollectionPath) throws GraphicsException {
         // Throws exception:
-        terrainAssets = new TerrainAssets(currentTerrainAssetPath);
+        terrainCollection = new TerrainCollection(currentTerrainCollectionPath);
 
         this.screenSize = screenSize.copy();
         this.playerPos = new Vec2f(0f, 0f);
@@ -63,8 +63,8 @@ public class GameState implements Disposable {
         return displayDiv;
     }
 
-    public TerrainAssets getTerrainAssets() {
-        return terrainAssets;
+    public TerrainCollection getTerrainCollection() {
+        return terrainCollection;
     }
 
     public long getTime() {
@@ -81,7 +81,7 @@ public class GameState implements Disposable {
 
     @Override
     public void dispose() {
-        terrainAssets.dispose();
+        terrainCollection.dispose();
     }
 
     public void incrementDisplayDiv() {
