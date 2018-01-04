@@ -2,12 +2,20 @@ package com.github.lasoloz.gameproj.control.details;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-
-import java.io.BufferedReader;
-import java.io.IOException;
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.SerializationException;
+import com.github.lasoloz.gameproj.entitites.BlueprintException;
+import com.github.lasoloz.gameproj.entitites.BlueprintSet;
+import com.github.lasoloz.gameproj.entitites.Instance;
+import com.github.lasoloz.gameproj.graphics.GraphicsException;
+import com.github.lasoloz.gameproj.graphics.TerrainCollection;
+import com.github.lasoloz.gameproj.util.ResourceLoader;
 
 public class GameMap {
-    private int[][] map;
+    private GameMapTile[][] map;
+    private TerrainCollection terrainCollection;
+    private BlueprintSet blueprintSet;
 
     public GameMap() {
         map = null;
@@ -19,100 +27,101 @@ public class GameMap {
 
 
     public boolean loadMap(String mapFileName) {
-        String fullMapFileName = "maps/" + mapFileName;
-        FileHandle mapFile = Gdx.files.internal(fullMapFileName);
+        Gdx.app.log(
+                "GameMap",
+                "Attempting to load game map `" +
+                        mapFileName +
+                        "`..."
+        );
+        FileHandle mapFile = ResourceLoader.loadInternalOrLocalResource(
+                mapFileName
+        );
 
-        if (!mapFile.exists()) {
+        if (mapFile == null) {
             Gdx.app.error("GameMap", "Map file does not exist!");
             return false;
         }
 
-        BufferedReader br = mapFile.reader(256);
+        JsonValue root;
+        try {
+            root = new JsonReader().parse(mapFile);
+        } catch (SerializationException ex) {
+            Gdx.app.error("GameMap", "Failed to parse JSON!");
+            return false;
+        }
 
         try {
-            String dataType = br.readLine();
+            int width = root.getInt("width");
+            int height = root.getInt("height");
 
-            if (dataType == null) {
-                Gdx.app.error(
-                        "GameMap",
-                        "Data type line must contain a string specification!"
-                );
-                return false;
-            }
+            // Parse map data:
+            map = new GameMapTile[height][width];
+            parseData(root.get("data"));
 
-            String mapSize = br.readLine();
-            if (mapSize == null) {
-                Gdx.app.error(
-                        "GameMap",
-                        "Map size line must have content!"
-                );
-            }
-            String[] nums = mapSize.split(" +");
-            int height = Integer.parseInt(nums[0]);
-            int width = Integer.parseInt(nums[1]);
+            // Parse terrain set:
+            String terrainPath = root.getString("terrain");
+            terrainCollection = new TerrainCollection(terrainPath);
+            Gdx.app.log("GameMap", "Terrain data parsed!");
 
-            if (dataType.equals("num")) {
-                return parseNumericData(br, width, height);
-            } else {
-                return parseBinaryData(br, width, height);
-            }
+            // Parse blueprint set:
+            String blueprintSetPath = root.getString("blueprint_set");
+            blueprintSet = new BlueprintSet(blueprintSetPath);
+            Gdx.app.log("GameMap", "Blueprint data parsed!");
 
-        } catch (IOException ex) {
-            Gdx.app.error("GameMap", "IOException occoured!");
-            map = null;
+            // Parse units:
+            parseUnits(root.get("units"));
+
+            return true;
+        } catch (NullPointerException ex) {
+            Gdx.app.error("GameMap", "Null element in map file!");
             return false;
-//        } catch (IndexOutOfBoundsException ex) {
-//            Gdx.app.error("GameMap", "IndexOutOfBoundsException occoured!");
-//            System.err.println(ex.toString());
-//            map = null;
-//            return false;
-        } catch (NumberFormatException ex) {
-            Gdx.app.error("GameMap", "NumberFormatException occoured!");
-            map = null;
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            Gdx.app.error("GameMap","Invalid map data (index out of bounds)!");
+            return false;
+        } catch (GraphicsException ex) {
+            Gdx.app.error("GameMap", "Failed to load Terrain Collection!");
+            return false;
+        } catch (BlueprintException ex) {
+            Gdx.app.error("GameMap", "Failed to load blueprint set!");
             return false;
         }
     }
 
+    private void parseData(JsonValue data) {
+        int row = 0;
 
-    private boolean parseNumericData(
-            BufferedReader br,
-            int width,
-            int height
-    ) throws IOException {
-        int countX = 0;
-        int countY = 0;
-        map = new int [height][width];
-        while (countX < width || countY < height) {
-            String currentData = br.readLine();
-            if (currentData == null) {
-                return false;
-            }
-            String[] tiles = currentData.split(" +");
+        while (row < map.length) {
+            JsonValue rowIter = data.get(row);
+            int col = 0;
 
-            for (int i = 0; i < tiles.length; ++i) {
-                try {
-                    map[countY][countX] = Integer.parseInt(tiles[i]);
-                    ++countX;
-                    if (countX == width) {
-                        countX = 0;
-                        ++countY;
-                        if (countY == height) {
-                            return true;
-                        }
-                    }
-                } catch (NumberFormatException ex) {
-                    Gdx.app.error("GameMap", "Failed to read map tile!");
-                }
+            while (col < map[0].length) {
+                JsonValue colIter = rowIter.get(col);
+                map[row][col] = new GameMapTile(colIter.asInt());
+                ++col;
             }
+
+            ++row;
         }
 
-        return true;
+        Gdx.app.log("GameMap", "Map data parsed!");
     }
 
+    private void parseUnits(JsonValue units) {
+        JsonValue unitIter = units.child;
 
-    private boolean parseBinaryData(BufferedReader br, int width, int height) {
-        /// TODO: implement this!
-        return false;
+        while (unitIter != null) {
+            int type = unitIter.getInt("type");
+            int posX = unitIter.getInt("x");
+            int posY = unitIter.getInt("y");
+
+            map[posY][posX].addContent(
+                    new Instance(blueprintSet.getBlueprint(type))
+            );
+
+            unitIter = unitIter.next;
+        }
+
+        Gdx.app.log("GameMap", "Unit list parsed!");
     }
 
 
@@ -125,6 +134,19 @@ public class GameMap {
     }
 
     public int getData(int x, int y) {
+        return map[y][x].getTileCode();
+    }
+
+
+    public Instance getInstance(int x, int y) {
+        return map[y][x].getContent();
+    }
+
+    public GameMapTile getGameMapTile(int x, int y) {
         return map[y][x];
+    }
+
+    public TerrainCollection getTerrainCollection() {
+        return terrainCollection;
     }
 }

@@ -1,28 +1,49 @@
 package com.github.lasoloz.gameproj.entitites;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.github.lasoloz.gameproj.blueprints.InstanceType;
-import com.github.lasoloz.gameproj.math.Vec2f;
+import com.badlogic.gdx.utils.ArrayMap;
 
-public abstract class Instance {
-    public final static Vec2f gridSize = new Vec2f(24f, 16f);
+public class Instance {
+    private Blueprint blueprint;
+    private ArrayMap<Property, Integer> integerProperties;
+    private ArrayMap<Property, Float> floatProperties;
 
-    protected Vec2f pos;
+//    private Property currentAction;
 
-    public Instance(Vec2f pos) {
-        this.pos = pos.copy();
+
+    public Instance(Blueprint blueprint) {
+        this.blueprint = blueprint;
+        integerProperties = new ArrayMap<Property, Integer>();
     }
 
 
-    public Vec2f getPos() {
-        return pos.copy();
+    public Blueprint getBlueprint() {
+        return blueprint;
     }
 
 
-    public abstract void draw(SpriteBatch batch, float deltaTime);
+    public void addIntegerProperty(Property property, Integer value) {
+        this.integerProperties.put(property, value);
+    }
 
 
-    public InstanceType getInstanceType() {
-        return InstanceType.INSTANCE;
+    public Integer getIntegerProperty(Property property) {
+        if (property.isInstanceSpecific()) {
+            return integerProperties.get(property);
+        } else {
+            return blueprint.getIntegerProperty(property);
+        }
+    }
+
+
+    public void addFloatProperty(Property property, Float value) {
+        this.floatProperties.put(property, value);
+    }
+
+    public Float getFloatProperty(Property property) {
+        if (property.isInstanceSpecific()) {
+            return floatProperties.get(property);
+        } else {
+            return blueprint.getFloatProperty(property);
+        }
     }
 }

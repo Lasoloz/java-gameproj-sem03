@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-public class AnimationWrapper implements Drawable {
+public class AnimationWrapper extends Drawable {
     private Animation<TextureRegion> animation;
 
     public AnimationWrapper(
@@ -19,26 +19,27 @@ public class AnimationWrapper implements Drawable {
         );
     }
 
-    @Override
-    public void draw(SpriteBatch batch, float posX, float posY, float deltaTime) {
-        batch.draw(animation.getKeyFrame(deltaTime, true), posX, posY);
+    public AnimationWrapper(
+            TextureAtlas atlas,
+            String atlasRegionName,
+            float frameDuration,
+            int originX,
+            int originY
+    ) {
+        super(originX, originY);
+        animation = new Animation<TextureRegion>(
+                frameDuration,
+                atlas.findRegions(atlasRegionName)
+        );
     }
 
     @Override
-    public void draw(
+    protected void drawToCoords(
             SpriteBatch batch,
-            float posX,
-            float posY,
-            float width,
-            float height,
+            int posX,
+            int posY,
             float deltaTime
     ) {
-        batch.draw(
-                animation.getKeyFrame(deltaTime, true),
-                posX,
-                posY,
-                width,
-                height
-        );
+        batch.draw(animation.getKeyFrame(deltaTime, true), posX, posY);
     }
 }

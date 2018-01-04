@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-public class SpriteWrapper implements Drawable {
+public class SpriteWrapper extends Drawable {
     private Sprite sprite;
 
 //    public SpriteWrapper(TextureAtlas atlas, String atlasRegionName) {
@@ -15,13 +15,18 @@ public class SpriteWrapper implements Drawable {
         sprite = new Sprite(region);
     }
 
-    @Override
-    public void draw(SpriteBatch batch, float posX, float posY, float deltaTime) {
-        batch.draw(sprite, posX, posY);
+    public SpriteWrapper(TextureRegion region, int originX, int originY) {
+        super(originX, originY);
+        sprite = new Sprite(region);
     }
 
     @Override
-    public void draw(SpriteBatch batch, float posX, float posY, float width, float height, float deltaTime) {
-        batch.draw(sprite, posX, posY, width, height);
+    protected void drawToCoords(
+            SpriteBatch batch,
+            int posX,
+            int posY,
+            float deltaTime
+    ) {
+        batch.draw(sprite, posX, posY);
     }
 }

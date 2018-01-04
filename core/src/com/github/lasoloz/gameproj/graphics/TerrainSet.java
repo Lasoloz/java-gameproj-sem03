@@ -68,6 +68,6 @@ public class TerrainSet {
             Vec2f pos,
             float deltaTime
     ) {
-        which.draw(batch, pos.getX(), pos.getY(), deltaTime);
+        which.draw(batch, pos, deltaTime);
     }
 }

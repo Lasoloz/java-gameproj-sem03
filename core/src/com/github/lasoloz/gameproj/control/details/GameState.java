@@ -4,8 +4,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.github.lasoloz.gameproj.control.GameInput;
-import com.github.lasoloz.gameproj.graphics.GraphicsException;
-import com.github.lasoloz.gameproj.graphics.TerrainCollection;
 import com.github.lasoloz.gameproj.math.Vec2f;
 
 public class GameState implements Disposable {
@@ -20,24 +18,21 @@ public class GameState implements Disposable {
     private int displayDiv;
 
     private long time;
+    private long startTime;
     private long displayDivChangeTime;
-    private TerrainCollection terrainCollection;
 
 
 
     public GameState(
             Vec2f screenSize,
-            int displayDiv,
-            String currentTerrainCollectionPath) throws GraphicsException {
-        // Throws exception:
-        terrainCollection = new TerrainCollection(currentTerrainCollectionPath);
-
+            int displayDiv) {
         this.screenSize = screenSize.copy();
         this.playerPos = new Vec2f(0f, 0f);
         this.displayDiv = displayDiv;
         createCamera();
         input = new GameInput();
-        time = 0;
+        startTime = TimeUtils.millis();
+        time = startTime;
         displayDivChangeTime = 0;
 
         map = new GameMap();
@@ -63,16 +58,12 @@ public class GameState implements Disposable {
         return displayDiv;
     }
 
-    public TerrainCollection getTerrainCollection() {
-        return terrainCollection;
-    }
-
     public long getTime() {
         return time;
     }
 
     public float getStateTime() {
-        return time / 1000f;
+        return (time - startTime) / 1000f;
     }
 
     public void updateTime() {
@@ -81,7 +72,7 @@ public class GameState implements Disposable {
 
     @Override
     public void dispose() {
-        terrainCollection.dispose();
+        // TODO: EMPTY!!!
     }
 
     public void incrementDisplayDiv() {

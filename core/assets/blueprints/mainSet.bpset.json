@@ -1,0 +1,51 @@
+{
+  "pack": "test/pack.atlas",
+  "blueprints": [{
+    "type": "misc",
+    "name": "Torch",
+    "index": "misc/torch/sprite",
+    "idle": {
+      "type": "animation",
+      "region": "misc/torch/sprite",
+      "origin_x": 0,
+      "origin_y": 2,
+      "anim_speed": 0.066666667
+    }
+  }],
+
+
+
+  "comment-field-for-examples-WILL-BE-IGNORED!": {
+    "blueprints": [{
+      "type (can be: misc, loot, enemy, player)": "loot",
+      "index (this is index region)": "loot/gold",
+      "idle (almost everything has idle animation)": {
+        "type (animation/static)": "static",
+        "region": "loot/gold"
+      },
+      "value (loot must have value!)": 10
+    }, {
+      "type": "enemy",
+      "health": 28,
+      "index": "enemy/goblin",
+      "idle:": { "like in the first example...": false },
+      "attack-melee": {
+        "type": "animation",
+        "region": "enemy/goblin-attack",
+        "damage-mean": 5,
+        "damage-var": 2
+      },
+      "protect-melee": {
+        "type": "animation",
+        "region": "enemy/goblin-prot",
+        "protection-mean": 1,
+        "protection-var": 1
+      }
+    }, {
+      "type": "player",
+      "health": 82,
+      "index": "player/human",
+      "...": false
+    }]
+  }
+}

@@ -11,6 +11,10 @@ import com.badlogic.gdx.utils.Disposable;
 import com.github.lasoloz.gameproj.control.details.GameMap;
 import com.github.lasoloz.gameproj.control.details.GameState;
 import com.github.lasoloz.gameproj.control.details.Observer;
+import com.github.lasoloz.gameproj.entitites.Blueprint;
+import com.github.lasoloz.gameproj.entitites.Instance;
+import com.github.lasoloz.gameproj.entitites.Property;
+import com.github.lasoloz.gameproj.graphics.Drawable;
 import com.github.lasoloz.gameproj.graphics.TerrainCollection;
 import com.github.lasoloz.gameproj.graphics.TerrainSet;
 import com.github.lasoloz.gameproj.math.Vec2f;
@@ -45,7 +49,7 @@ public class FieldRenderer implements Observer, Disposable {
 
         float time = gameState.getStateTime();
 
-        TerrainCollection terrainCollection = gameState.getTerrainCollection();
+        TerrainCollection terrainCollection = map.getTerrainCollection();
 
         Vec2f topLeft = new Vec2f(0, (height - 1) * GameState.gridSize.getY());
         Vec2f iter = topLeft.copy();
@@ -55,6 +59,7 @@ public class FieldRenderer implements Observer, Disposable {
                 TerrainSet current = terrainCollection.getSet(i + 3*j);
                 int data = map.getData(j, i);
 
+                // Draw terrain:
                 switch (data) {
                     case TerrainSet.GROUND_TYPE:
                         current.drawGround(spriteBatch, iter, time);
@@ -80,6 +85,16 @@ public class FieldRenderer implements Observer, Disposable {
                     default:
                         // Do nothing... Reformat this, please (myself)!
                 }
+
+
+                // Draw instances:
+                Instance unit = map.getInstance(j, i);
+                if (unit != null) {
+                    Blueprint bp = unit.getBlueprint();
+                    Drawable sp = bp.getDrawableProperty(Property.PR_IDLE);
+                    sp.draw(spriteBatch, iter, time);
+                }
+
 
                 iter.addToX(GameState.gridSize.getX());
             }
@@ -174,6 +189,7 @@ public class FieldRenderer implements Observer, Disposable {
                 (float) Math.floor(point.getY() / gridY) * gridY
         );
     }
+
 
     @Override
     public void dispose() {

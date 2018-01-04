@@ -6,8 +6,14 @@ import com.badlogic.gdx.graphics.GL20;
 import com.github.lasoloz.gameproj.control.FieldRenderer;
 import com.github.lasoloz.gameproj.control.GameController;
 import com.github.lasoloz.gameproj.control.details.GameState;
+import com.github.lasoloz.gameproj.control.details.Subject;
+import com.github.lasoloz.gameproj.entitites.Blueprint;
+import com.github.lasoloz.gameproj.entitites.BlueprintException;
+import com.github.lasoloz.gameproj.entitites.BlueprintSet;
 import com.github.lasoloz.gameproj.graphics.GraphicsException;
 import com.github.lasoloz.gameproj.math.Vec2f;
+
+
 
 public class GameProj extends ApplicationAdapter {
     private GameState gameState;
@@ -18,12 +24,17 @@ public class GameProj extends ApplicationAdapter {
     @Override
     public void create() {
         try {
+            BlueprintSet test = new BlueprintSet("blueprints/mainSet.bpset.json");
+
+            ///
             gameState = new GameState(
-                    new Vec2f(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()),
-                    4,
-                    "terrains/dirt.terrain"
+                    new Vec2f(
+                            Gdx.graphics.getWidth(),
+                            Gdx.graphics.getHeight()
+                    ),
+                    4
             );
-            if (!gameState.loadMap("dungeon0.map")) {
+            if (!gameState.loadMap("maps/dungeon0.map.json")) {
                 Gdx.app.error("GameProj", "Failed to load map!");
                 Gdx.app.exit();
             }
@@ -31,12 +42,8 @@ public class GameProj extends ApplicationAdapter {
             fieldRenderer = new FieldRenderer();
 
             gameController.attach(fieldRenderer);
-        } catch (GraphicsException ex) {
-            Gdx.app.error(
-                    "GameProj",
-                    ex.getMessage()
-            );
-            Gdx.app.exit();
+        } catch (BlueprintException ex) {
+            System.out.println(ex.getMessage());
         }
     }
 
