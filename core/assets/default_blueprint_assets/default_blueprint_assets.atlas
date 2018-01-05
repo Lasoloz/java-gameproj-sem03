@@ -1,0 +1,138 @@
+
+default_blueprint_assets.png
+size: 64,128
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+loot/gold_bar/gold_bar
+  rotate: false
+  xy: 2, 110
+  size: 28, 16
+  orig: 28, 16
+  offset: 0, 0
+  index: 0
+loot/gold_bar/gold_bar
+  rotate: false
+  xy: 2, 92
+  size: 28, 16
+  orig: 28, 16
+  offset: 0, 0
+  index: 1
+loot/gold_bar/gold_bar
+  rotate: false
+  xy: 32, 110
+  size: 28, 16
+  orig: 28, 16
+  offset: 0, 0
+  index: 2
+loot/gold_bar/gold_bar
+  rotate: false
+  xy: 2, 74
+  size: 28, 16
+  orig: 28, 16
+  offset: 0, 0
+  index: 3
+loot/gold_bar/gold_bar
+  rotate: false
+  xy: 32, 92
+  size: 28, 16
+  orig: 28, 16
+  offset: 0, 0
+  index: 4
+loot/gold_bar/gold_bar
+  rotate: false
+  xy: 2, 56
+  size: 28, 16
+  orig: 28, 16
+  offset: 0, 0
+  index: 5
+loot/gold_bar/gold_bar
+  rotate: false
+  xy: 32, 74
+  size: 28, 16
+  orig: 28, 16
+  offset: 0, 0
+  index: 6
+loot/gold_bar/gold_bar
+  rotate: false
+  xy: 2, 38
+  size: 28, 16
+  orig: 28, 16
+  offset: 0, 0
+  index: 7
+loot/gold_bar/gold_bar
+  rotate: false
+  xy: 32, 56
+  size: 28, 16
+  orig: 28, 16
+  offset: 0, 0
+  index: 8
+loot/gold_bar/gold_bar
+  rotate: false
+  xy: 2, 20
+  size: 28, 16
+  orig: 28, 16
+  offset: 0, 0
+  index: 9
+loot/gold_bar/gold_bar
+  rotate: false
+  xy: 2, 2
+  size: 28, 16
+  orig: 28, 16
+  offset: 0, 0
+  index: 10
+loot/gold_bar/gold_bar
+  rotate: false
+  xy: 32, 38
+  size: 28, 16
+  orig: 28, 16
+  offset: 0, 0
+  index: 11
+
+default_blueprint_assets2.png
+size: 32,128
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+misc/torch/sprite
+  rotate: false
+  xy: 2, 92
+  size: 20, 16
+  orig: 20, 16
+  offset: 0, 0
+  index: 0
+misc/torch/sprite
+  rotate: false
+  xy: 2, 74
+  size: 20, 16
+  orig: 20, 16
+  offset: 0, 0
+  index: 1
+misc/torch/sprite
+  rotate: false
+  xy: 2, 56
+  size: 20, 16
+  orig: 20, 16
+  offset: 0, 0
+  index: 2
+misc/torch/sprite
+  rotate: false
+  xy: 2, 38
+  size: 20, 16
+  orig: 20, 16
+  offset: 0, 0
+  index: 3
+misc/torch/sprite
+  rotate: false
+  xy: 2, 20
+  size: 20, 16
+  orig: 20, 16
+  offset: 0, 0
+  index: 4
+misc/torch/sprite
+  rotate: false
+  xy: 2, 2
+  size: 20, 16
+  orig: 20, 16
+  offset: 0, 0
+  index: 5

@@ -5,6 +5,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.github.lasoloz.gameproj.control.GameInput;
 import com.github.lasoloz.gameproj.math.Vec2f;
+import javafx.util.Pair;
 
 public class GameState implements Disposable {
     public final static Vec2f gridSize = new Vec2f(28f, 16f);
@@ -106,6 +107,17 @@ public class GameState implements Disposable {
 
     public float getMapHeight() {
         return gridSize.getY() * map.getHeight();
+    }
+
+
+    public int[] getRelativeMouseGridPos() {
+        Vec2f pos = input.getRelativeMouseCoord();
+        int[] result = new int[2];
+        result[0] = (int) Math.floor(pos.getX() / gridSize.getX());
+        result[1] = map.getHeight() - 1 - (int) Math.floor(
+                pos.getY() / gridSize.getY()
+        );
+        return result;
     }
 
 

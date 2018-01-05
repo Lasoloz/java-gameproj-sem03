@@ -8,12 +8,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
+import com.github.lasoloz.gameproj.blueprints.Blueprint;
 import com.github.lasoloz.gameproj.control.details.GameMap;
 import com.github.lasoloz.gameproj.control.details.GameState;
 import com.github.lasoloz.gameproj.control.details.Observer;
-import com.github.lasoloz.gameproj.entitites.Blueprint;
+import com.github.lasoloz.gameproj.entitites.Action;
 import com.github.lasoloz.gameproj.entitites.Instance;
-import com.github.lasoloz.gameproj.entitites.Property;
 import com.github.lasoloz.gameproj.graphics.Drawable;
 import com.github.lasoloz.gameproj.graphics.TerrainCollection;
 import com.github.lasoloz.gameproj.graphics.TerrainSet;
@@ -91,7 +91,7 @@ public class FieldRenderer implements Observer, Disposable {
                 Instance unit = map.getInstance(j, i);
                 if (unit != null) {
                     Blueprint bp = unit.getBlueprint();
-                    Drawable sp = bp.getDrawableProperty(Property.PR_IDLE);
+                    Drawable sp = bp.getActionImage(Action.ACT_IDLE);
                     sp.draw(spriteBatch, iter, time);
                 }
 

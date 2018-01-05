@@ -4,6 +4,9 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
+import com.github.lasoloz.gameproj.blueprints.Blueprint;
+import com.github.lasoloz.gameproj.blueprints.LootBlueprint;
+import com.github.lasoloz.gameproj.blueprints.MiscBlueprint;
 import com.github.lasoloz.gameproj.graphics.AnimationWrapper;
 import com.github.lasoloz.gameproj.graphics.Drawable;
 import com.github.lasoloz.gameproj.graphics.SpriteWrapper;
@@ -47,7 +50,7 @@ public class BlueprintSet {
                     ResourceLoader.loadInternalOrLocalResource(packName)
             );
 
-            readBlueprints(root.get("blueprints"), pack);
+            readBlueprints(root.get("blueprints"));
         } catch (NullPointerException ex) {
             throw new BlueprintException(
                     "BlueprintSet",
@@ -56,47 +59,71 @@ public class BlueprintSet {
         }
     }
 
-    private void readBlueprints(JsonValue blueprints, TextureAtlas pack) {
+    private void readBlueprints(JsonValue blueprints) {
         JsonValue bpIter = blueprints.child;
 
         while (bpIter != null) {
             String type = bpIter.getString("type");
+            Blueprint result;
             if (type.equals("misc")) {
-                createMisc(bpIter, pack);
+                result = createMisc(bpIter);
             } else if (type.equals("loot")) {
-                createLoot(bpIter);
+                result = createLoot(bpIter);
             } else {
-                createUnit(bpIter);
+                result = createUnit(bpIter);
             }
+            // Set name:
+            String name = bpIter.getString("name");
+            result.setName(name);
+            this.blueprints.add(result);
 
             bpIter = bpIter.next;
         }
     }
 
-    private void createMisc(JsonValue blueprint, TextureAtlas pack) {
-        String name = blueprint.getString("name");
-        String indexRegion = blueprint.getString("index");
-        SpriteWrapper index = new SpriteWrapper(pack.findRegion(indexRegion));
-        Blueprint misc = new Blueprint(name, index);
-
+    private Blueprint createMisc(JsonValue blueprint) {
         // Get idle information:
-        Drawable idleAnimation = extractIdle(blueprint, pack);
+        SpriteWrapper indexSprite = extractIndex(blueprint);
+        Drawable idleAnimation = extractIdle(blueprint);
 
-        misc.addDrawableProperty(Property.PR_IDLE, idleAnimation);
+        // Create blueprint for instance class:
+        MiscBlueprint misc = new MiscBlueprint(indexSprite, idleAnimation);
 
-        blueprints.add(misc);
+        // Return blueprint:
+        return misc;
     }
 
-    private void createLoot(JsonValue blueprint) {
+    private Blueprint createLoot(JsonValue blueprint) {
+        // Get index and idle information:
+        SpriteWrapper indexSprite = extractIndex(blueprint);
+        Drawable idleAnimation = extractIdle(blueprint);
+
+        // Create loot blueprint:
+        LootBlueprint loot = new LootBlueprint(indexSprite, idleAnimation);
+
+        // Get loot value:
+        int value = blueprint.getInt("value");
+        loot.setValue(value);
+
+        // Return blueprint:
+        return loot;
     }
 
-    private void createUnit(JsonValue blueprint) {
+    private Blueprint createUnit(JsonValue blueprint) {
+        return null;
+    }
+
+
+    // Index extraction:
+    private SpriteWrapper extractIndex(JsonValue blueprint) {
+        String indexRegion = blueprint.getString("index");
+        return new SpriteWrapper(pack.findRegion(indexRegion));
     }
 
 
 
     // Action extractor functions:
-    private Drawable extractIdle(JsonValue blueprint, TextureAtlas pack) {
+    private Drawable extractIdle(JsonValue blueprint) {
         JsonValue idleData = blueprint.get("idle");
 
         String type = idleData.getString("type");

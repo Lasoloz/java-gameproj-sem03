@@ -11,16 +11,7 @@ public enum Property {
     PR_ARROW_PROTECTION(false),
     PR_MAGIC_PROTECTION(false),
 
-    /// TODO: Actions should be moved to a different class!
-    PR_IDLE(false),
-    PR_MOVING_NORTH(false),
-    PR_MOVING_SOUTH(false),
-    PR_MOVING_WEST(false),
-    PR_MOVING_EAST(false),
-    PR_ATTACKING_NORTH(false),
-    PR_ATTACKING_SOUTH(false),
-    PR_ATTACKING_WEST(false),
-    PR_ATTACKING_EAST(false);
+    PR_VALUE(false);
 
     boolean instanceSpecific;
 

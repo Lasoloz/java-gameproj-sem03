@@ -1,4 +1,4 @@
-package com.github.lasoloz.gameproj.entitites;
+package com.github.lasoloz.gameproj.blueprints;
 
 public enum UnitTypes {
     // Static stuff:
@@ -6,8 +6,7 @@ public enum UnitTypes {
     LOOT,
 
     // Enemy types:
-    ENEMY_MELEE,
-    ENEMY_RANGED,
+    ENEMY,
 
     // Player type:
     PLAYER

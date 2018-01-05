@@ -1,5 +1,5 @@
 {
-  "pack": "test/pack.atlas",
+  "pack": "default_blueprint_assets/default_blueprint_assets.atlas",
   "blueprints": [{
     "type": "misc",
     "name": "Torch",
@@ -7,10 +7,22 @@
     "idle": {
       "type": "animation",
       "region": "misc/torch/sprite",
-      "origin_x": 0,
+      "origin_x": 4,
       "origin_y": 2,
       "anim_speed": 0.066666667
     }
+  }, {
+    "type": "loot",
+    "name": "Gold Bar",
+    "index": "loot/gold_bar/gold_bar",
+    "idle": {
+      "type": "animation",
+      "region": "loot/gold_bar/gold_bar",
+      "origin_x": 0,
+      "origin_y": 0,
+      "anim_speed": 0.066666667
+    },
+    "value": 1
   }],
 
 
