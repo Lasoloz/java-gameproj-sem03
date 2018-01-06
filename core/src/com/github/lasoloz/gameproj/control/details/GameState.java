@@ -5,7 +5,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.github.lasoloz.gameproj.control.GameInput;
 import com.github.lasoloz.gameproj.math.Vec2f;
-import javafx.util.Pair;
+import com.github.lasoloz.gameproj.math.Vec2i;
 
 public class GameState implements Disposable {
     public final static Vec2f gridSize = new Vec2f(28f, 16f);
@@ -13,9 +13,10 @@ public class GameState implements Disposable {
     private GameMap map;
 
     private OrthographicCamera camera;
+    private OrthographicCamera uiCamera;
     private GameInput input;
-    private Vec2f playerPos;
-    private Vec2f screenSize;
+    private Vec2f cameraPos;
+    private Vec2i screenSize;
     private int displayDiv;
 
     private long time;
@@ -25,10 +26,10 @@ public class GameState implements Disposable {
 
 
     public GameState(
-            Vec2f screenSize,
+            Vec2i screenSize,
             int displayDiv) {
         this.screenSize = screenSize.copy();
-        this.playerPos = new Vec2f(0f, 0f);
+        this.cameraPos = new Vec2f(0f, 0f);
         this.displayDiv = displayDiv;
         createCamera();
         input = new GameInput();
@@ -43,15 +44,19 @@ public class GameState implements Disposable {
         return camera;
     }
 
+    public OrthographicCamera getUiCamera() {
+        return uiCamera;
+    }
+
     public GameInput getInput() {
         return input;
     }
 
-    public Vec2f getPlayerPos() {
-        return playerPos;
+    public Vec2f getCameraPos() {
+        return cameraPos;
     }
 
-    public Vec2f getScreenSize() {
+    public Vec2i getScreenSize() {
         return screenSize;
     }
 
@@ -110,22 +115,23 @@ public class GameState implements Disposable {
     }
 
 
-    public int[] getRelativeMouseGridPos() {
+    public Vec2i getRelativeMouseGridPos() {
         Vec2f pos = input.getRelativeMouseCoord();
-        int[] result = new int[2];
-        result[0] = (int) Math.floor(pos.getX() / gridSize.getX());
-        result[1] = map.getHeight() - 1 - (int) Math.floor(
-                pos.getY() / gridSize.getY()
+        return new Vec2i(
+                (int) Math.floor(pos.getX() / gridSize.x),
+                map.getHeight() - 1 - (int) Math.floor(
+                        pos.y / gridSize.y
+                ) // Invert vertical coordinates ('cause OpenGL)
         );
-        return result;
     }
 
 
 
     private void createCamera() {
         camera = new OrthographicCamera(
-                screenSize.getX() / displayDiv,
-                screenSize.getY() / displayDiv
+                screenSize.x / displayDiv,
+                screenSize.y / displayDiv
         );
+        uiCamera = new OrthographicCamera(screenSize.x, screenSize.y);
     }
 }

@@ -1,7 +1,6 @@
 package com.github.lasoloz.gameproj.blueprints;
 
 import com.badlogic.gdx.utils.ArrayMap;
-import com.github.lasoloz.gameproj.entitites.Action;
 import com.github.lasoloz.gameproj.graphics.Drawable;
 import com.github.lasoloz.gameproj.graphics.SpriteWrapper;
 import com.github.lasoloz.gameproj.math.Vec2f;
@@ -36,7 +35,7 @@ public abstract class Blueprint {
         }
     }
 
-    public abstract UnitTypes getType();
+    public abstract UnitType getType();
 
 
     public void setName(String name) {

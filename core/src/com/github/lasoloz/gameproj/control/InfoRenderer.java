@@ -12,6 +12,7 @@ import com.github.lasoloz.gameproj.control.details.GameState;
 import com.github.lasoloz.gameproj.control.details.Observer;
 import com.github.lasoloz.gameproj.entitites.Instance;
 import com.github.lasoloz.gameproj.graphics.TerrainSet;
+import com.github.lasoloz.gameproj.math.Vec2i;
 
 public class InfoRenderer implements Observer, Disposable {
     private SpriteBatch textBatch;
@@ -40,44 +41,50 @@ public class InfoRenderer implements Observer, Disposable {
 
     @Override
     public void update(GameState gameState) {
-        int[] p = gameState.getRelativeMouseGridPos();
-        int x = p[0];
-        int y = p[1];
+        // Draw information on update:
+        // Get
+        Vec2i pos = gameState.getRelativeMouseGridPos();
 
         String message;
 
-        if (x < 0 ||
-                x >= gameState.getMap().getWidth() ||
-                y < 0 ||
-                y >= gameState.getMap().getHeight()
+        if (pos.x < 0 ||
+                pos.x >= gameState.getMap().getWidth() ||
+                pos.y < 0 ||
+                pos.y >= gameState.getMap().getHeight()
                 ) {
             message = " - ";
         } else {
             // Get unit information
-            message = "(" + x + ", " + y + ")";
+            message = "(" + pos.x + ", " + pos.y + ")";
             GameMap map = gameState.getMap();
-            int data = map.getData(x, y);
+            int data = map.getData(pos.x, pos.y);
             // Print terrain information:
             message += getTerrainInformation(data);
             // Get instance information:
-            Instance instance = map.getInstance(x, y);
+            Instance instance = map.getInstance(pos.x, pos.y);
             message += getInstanceInformation(instance);
         }
 
-        int length = (int) gameState.getScreenSize().getX() - BORDERS * 2;
+        int length = gameState.getScreenSize().x - BORDERS * 2;
 
+        // Drawing part;
+        // Draw base opaque rectangle:
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setProjectionMatrix(gameState.getUiCamera().combined);
         Gdx.gl.glEnable(GL20.GL_BLEND);
         shapeRenderer.setColor(0f, 0f, 0f, .7f);
         shapeRenderer.rect(BORDERS, BORDERS, length, FONT_SIZE + 2);
         shapeRenderer.end();
+        // Draw text information:
         textBatch.begin();
+        textBatch.setProjectionMatrix(gameState.getUiCamera().combined);
         font.draw(textBatch, message, BORDERS + 2, FONT_SIZE);
         textBatch.end();
     }
 
 
     private String getTerrainInformation(int data) {
+        // Get terrain information:
         switch (data) {
             case TerrainSet.GROUND_TYPE:
                 return " Ground;";
@@ -85,16 +92,19 @@ public class InfoRenderer implements Observer, Disposable {
                 return " Wall;";
             case TerrainSet.VOID_TYPE:
                 return " Void;";
-            default:
-                return " Unknown;";
         }
+
+        return " Unknown;";
     }
 
     private String getInstanceInformation(Instance instance) {
+        // Get information about instance:
+        // Check, if tile contains instance:
         if (instance == null) {
             return "";
         }
 
+        // Otherwise return information:
         return " " + instance.getBlueprint().getInfo();
     }
 

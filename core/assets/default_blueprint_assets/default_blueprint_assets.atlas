@@ -136,3 +136,58 @@ misc/torch/sprite
   orig: 20, 16
   offset: 0, 0
   index: 5
+
+default_blueprint_assets3.png
+size: 64,128
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+player/player_2nd_idle
+  rotate: false
+  xy: 32, 40
+  size: 28, 28
+  orig: 28, 28
+  offset: 0, 0
+  index: 0
+player/player_2nd_idle
+  rotate: false
+  xy: 32, 10
+  size: 28, 28
+  orig: 28, 28
+  offset: 0, 0
+  index: 1
+player/player_idle
+  rotate: false
+  xy: 2, 70
+  size: 28, 32
+  orig: 28, 32
+  offset: 0, 0
+  index: 0
+player/player_idle
+  rotate: false
+  xy: 2, 70
+  size: 28, 32
+  orig: 28, 32
+  offset: 0, 0
+  index: 4
+player/player_idle
+  rotate: false
+  xy: 2, 36
+  size: 28, 32
+  orig: 28, 32
+  offset: 0, 0
+  index: 1
+player/player_idle
+  rotate: false
+  xy: 32, 70
+  size: 28, 32
+  orig: 28, 32
+  offset: 0, 0
+  index: 2
+player/player_idle
+  rotate: false
+  xy: 2, 2
+  size: 28, 32
+  orig: 28, 32
+  offset: 0, 0
+  index: 3

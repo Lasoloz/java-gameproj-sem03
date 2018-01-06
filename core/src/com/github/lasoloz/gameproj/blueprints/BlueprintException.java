@@ -1,4 +1,4 @@
-package com.github.lasoloz.gameproj.entitites;
+package com.github.lasoloz.gameproj.blueprints;
 
 public class BlueprintException extends Exception {
     private String tag;

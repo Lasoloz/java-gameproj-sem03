@@ -16,8 +16,8 @@ public class LootBlueprint extends Blueprint {
     }
 
     @Override
-    public UnitTypes getType() {
-        return UnitTypes.LOOT;
+    public UnitType getType() {
+        return UnitType.LOOT;
     }
 
     @Override

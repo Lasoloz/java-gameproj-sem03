@@ -1,12 +1,10 @@
-package com.github.lasoloz.gameproj.entitites;
+package com.github.lasoloz.gameproj.blueprints;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
-import com.github.lasoloz.gameproj.blueprints.Blueprint;
-import com.github.lasoloz.gameproj.blueprints.LootBlueprint;
-import com.github.lasoloz.gameproj.blueprints.MiscBlueprint;
+import com.github.lasoloz.gameproj.blueprints.*;
 import com.github.lasoloz.gameproj.graphics.AnimationWrapper;
 import com.github.lasoloz.gameproj.graphics.Drawable;
 import com.github.lasoloz.gameproj.graphics.SpriteWrapper;
@@ -110,7 +108,17 @@ public class BlueprintSet {
     }
 
     private Blueprint createUnit(JsonValue blueprint) {
-        return null;
+        // Get index and idle information:
+        SpriteWrapper indexSprite = extractIndex(blueprint);
+        Drawable idleAnimation = extractIdle(blueprint);
+
+        // Create blueprint for player class:
+        PlayerBlueprint player = new PlayerBlueprint(indexSprite, idleAnimation);
+
+        // Additional setup:
+
+        // Return blueprint:
+        return player;
     }
 
 

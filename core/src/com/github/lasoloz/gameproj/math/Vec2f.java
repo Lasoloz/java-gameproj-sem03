@@ -1,8 +1,8 @@
 package com.github.lasoloz.gameproj.math;
 
 public class Vec2f {
-    private float x;
-    private float y;
+    public float x;
+    public float y;
 
 
     public Vec2f(float x, float y) {

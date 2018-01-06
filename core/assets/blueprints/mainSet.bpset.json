@@ -23,6 +23,17 @@
       "anim_speed": 0.066666667
     },
     "value": 1
+  }, {
+    "type": "player",
+    "name": "Player's Hero",
+    "index": "player/player_2nd_idle",
+    "idle": {
+      "type": "animation",
+      "region": "player/player_2nd_idle",
+      "origin_x": 0,
+      "origin_y": 4,
+      "anim_speed": 1
+    }
   }],
 
 

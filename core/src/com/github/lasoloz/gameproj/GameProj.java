@@ -2,13 +2,13 @@ package com.github.lasoloz.gameproj;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.github.lasoloz.gameproj.control.FieldRenderer;
 import com.github.lasoloz.gameproj.control.GameController;
 import com.github.lasoloz.gameproj.control.InfoRenderer;
 import com.github.lasoloz.gameproj.control.details.GameState;
-import com.github.lasoloz.gameproj.math.Vec2f;
-
+import com.github.lasoloz.gameproj.math.Vec2i;
 
 
 public class GameProj extends ApplicationAdapter {
@@ -17,11 +17,12 @@ public class GameProj extends ApplicationAdapter {
     private FieldRenderer fieldRenderer;
     private InfoRenderer infoRenderer;
 
+    private FPSLogger fpsLogger;
 
     @Override
     public void create() {
         gameState = new GameState(
-                new Vec2f(
+                new Vec2i(
                         Gdx.graphics.getWidth(),
                         Gdx.graphics.getHeight()
                 ),
@@ -37,6 +38,8 @@ public class GameProj extends ApplicationAdapter {
 
         gameController.attach(fieldRenderer);
         gameController.attach(infoRenderer);
+
+        fpsLogger = new FPSLogger();
     }
 
 
@@ -45,6 +48,7 @@ public class GameProj extends ApplicationAdapter {
         Gdx.gl.glClearColor(.1f, .1f, .1f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         gameController.update();
+        fpsLogger.log(); /// TODO: Get better alternative!
     }
 
     @Override

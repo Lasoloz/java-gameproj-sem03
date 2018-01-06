@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.github.lasoloz.gameproj.control.details.GameState;
 import com.github.lasoloz.gameproj.control.details.Subject;
 import com.github.lasoloz.gameproj.math.Vec2f;
+import com.github.lasoloz.gameproj.math.Vec2i;
 
 public class GameController extends Subject {
     public GameController(GameState gameState) {
@@ -30,12 +31,18 @@ public class GameController extends Subject {
 
 
     public void resize(int width, int height) {
+        int displayDiv = gameState.getDisplayDiv();
         OrthographicCamera camera = gameState.getCamera();
-        camera.viewportWidth = width / gameState.getDisplayDiv();
-        camera.viewportHeight = height / gameState.getDisplayDiv();
-        Vec2f screenSize = gameState.getScreenSize();
-        screenSize.setX(width);
-        screenSize.setY(height);
+        camera.viewportWidth = width / displayDiv;
+        camera.viewportHeight = height / displayDiv;
+
+        OrthographicCamera uiCamera = gameState.getUiCamera();
+        uiCamera.viewportWidth = width;
+        uiCamera.viewportHeight = height;
+
+        Vec2i screenSize = gameState.getScreenSize();
+        screenSize.x = width;
+        screenSize.y = height;
     }
 
 
@@ -43,7 +50,7 @@ public class GameController extends Subject {
     private void updateCamera() {
         GameInput input = gameState.getInput();
         Vec2f f = input.getCameraFocus(
-                gameState.getPlayerPos(),
+                gameState.getCameraPos(),
                 gameState.getScreenSize(),
                 gameState.getDisplayDiv()
         );
@@ -51,11 +58,17 @@ public class GameController extends Subject {
         camera.position.x = f.getX();
         camera.position.y = f.getY();
         camera.update();
+
+        OrthographicCamera uiCamera = gameState.getUiCamera();
+        Vec2i screenSize = gameState.getScreenSize();
+        uiCamera.position.x = screenSize.x / 2;
+        uiCamera.position.y = screenSize.y / 2;
+        uiCamera.update();
     }
 
 
     private void movePlayer() {
-        Vec2f pPos = gameState.getPlayerPos();
-        pPos.addTo(gameState.getInput().getInputVector());
+        Vec2f cPos = gameState.getCameraPos();
+        cPos.addTo(gameState.getInput().getInputVector());
     }
 }

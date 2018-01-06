@@ -3,6 +3,7 @@ package com.github.lasoloz.gameproj.control;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.github.lasoloz.gameproj.math.Vec2f;
+import com.github.lasoloz.gameproj.math.Vec2i;
 
 public class GameInput implements InputProcessor {
     private int mouseX, mouseY;
@@ -91,13 +92,13 @@ public class GameInput implements InputProcessor {
 
     public Vec2f getCameraFocus(
             Vec2f playerPos,
-            Vec2f screenSize,
+            Vec2i screenSize,
             int displayDiv
     ) {
         float pPosX = playerPos.getX();
         float pPosY = playerPos.getY();
-        float deltaX = (mouseX - screenSize.getX() / 2) / displayDiv;
-        float deltaY = (screenSize.getY() / 2 - mouseY) / displayDiv;
+        float deltaX = (mouseX - (float) screenSize.x / 2) / displayDiv;
+        float deltaY = ((float) screenSize.y / 2 - mouseY) / displayDiv;
         if (displayDiv > 2) {
             float oPosX = pPosX + deltaX;
             float oPosY = pPosY + deltaY;
