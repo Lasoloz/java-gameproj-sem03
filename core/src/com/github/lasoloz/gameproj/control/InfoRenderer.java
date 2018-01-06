@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import com.github.lasoloz.gameproj.control.details.GameMap;
 import com.github.lasoloz.gameproj.control.details.GameState;
@@ -18,7 +19,7 @@ public class InfoRenderer implements Observer, Disposable {
     private SpriteBatch textBatch;
     private ShapeRenderer shapeRenderer;
     private BitmapFont font;
-    private static final int FONT_SIZE = 36;
+    private static final int FONT_SIZE = 22;
     private static final int BORDERS = 4;
 
     public InfoRenderer() {
@@ -63,6 +64,13 @@ public class InfoRenderer implements Observer, Disposable {
             // Get instance information:
             Instance instance = map.getInstance(pos.x, pos.y);
             message += getInstanceInformation(instance);
+        }
+
+        // Get information about game state:
+        if (gameState.isWaitingForPlayer()) {
+            message += " - Please, perform action!";
+        } else {
+            message += " - Performing commands...";
         }
 
         int length = gameState.getScreenSize().x - BORDERS * 2;

@@ -2,6 +2,7 @@ package com.github.lasoloz.gameproj.control;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.github.lasoloz.gameproj.blueprints.Direction;
 import com.github.lasoloz.gameproj.control.details.GameState;
 import com.github.lasoloz.gameproj.control.details.Subject;
 import com.github.lasoloz.gameproj.math.Vec2f;
@@ -17,8 +18,9 @@ public class GameController extends Subject {
     @Override
     public void update() {
         gameState.updateTime();
-        movePlayer();
-//        System.out.println(gameState.getPlayerPos());
+
+        updateUnits();
+
         int scrollState = gameState.getInput().getScrollState();
         if (scrollState < 0) {
             gameState.incrementDisplayDiv();
@@ -48,9 +50,10 @@ public class GameController extends Subject {
 
 
     private void updateCamera() {
+        // Get field renderer camera, and update based on player position:
         GameInput input = gameState.getInput();
         Vec2f f = input.getCameraFocus(
-                gameState.getCameraPos(),
+                gameState.getRealPlayerPos(),
                 gameState.getScreenSize(),
                 gameState.getDisplayDiv()
         );
@@ -59,6 +62,7 @@ public class GameController extends Subject {
         camera.position.y = f.getY();
         camera.update();
 
+        // UI renderer camera:
         OrthographicCamera uiCamera = gameState.getUiCamera();
         Vec2i screenSize = gameState.getScreenSize();
         uiCamera.position.x = screenSize.x / 2;
@@ -67,8 +71,41 @@ public class GameController extends Subject {
     }
 
 
-    private void movePlayer() {
-        Vec2f cPos = gameState.getCameraPos();
-        cPos.addTo(gameState.getInput().getInputVector());
+    private void updateUnits() {
+        if (gameState.isWaitingForPlayer()) {
+            // Check, if player did something (mouse click)
+            GameInput gameInput = gameState.getInput();
+
+            if (gameInput.isLeftPressed()) {
+                System.out.println(getDirectionFromCoord());
+            }
+        } else {
+            UnitLogic.updateUnits(gameState);
+        }
+    }
+
+    private Direction getDirectionFromCoord() {
+        Vec2i mouseCoord = gameState.getInput().getMouseCoord();
+        Vec2i screenSize = gameState.getScreenSize();
+
+        float screenRatio = (float) screenSize.y / (float) screenSize.x;
+        float mainRatio = (float) mouseCoord.y / mouseCoord.x;
+        float secondaryRatio = (float) mouseCoord.y / (float) (
+                screenSize.x - mouseCoord.x
+        );
+
+        if (mainRatio > screenRatio) {
+            if (secondaryRatio > screenRatio) {
+                return Direction.DIR_SOUTH;
+            } else {
+                return Direction.DIR_WEST;
+            }
+        } else {
+            if (secondaryRatio > screenRatio) {
+                return Direction.DIR_EAST;
+            } else {
+                return Direction.DIR_NORTH;
+            }
+        }
     }
 }

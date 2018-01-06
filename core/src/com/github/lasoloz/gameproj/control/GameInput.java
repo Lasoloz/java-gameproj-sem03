@@ -6,12 +6,14 @@ import com.github.lasoloz.gameproj.math.Vec2f;
 import com.github.lasoloz.gameproj.math.Vec2i;
 
 public class GameInput implements InputProcessor {
-    private int mouseX, mouseY;
+    private int mouseX = 0, mouseY = 0;
     private int lastScrollState = 0;
     private int scrollState = 0;
     private Vec2f relPoint = new Vec2f(0f, 0f);
     private Vec2f inputVector = new Vec2f(0f, 0f);
     private boolean gridState = false;
+    private boolean leftPressed = false;
+    private boolean rightPressed = false;
 
     @Override
     public boolean keyDown(int keycode) {
@@ -60,7 +62,15 @@ public class GameInput implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return false;
+        switch (button) {
+            case Input.Buttons.LEFT:
+                leftPressed = true;
+                break;
+            case Input.Buttons.RIGHT:
+                rightPressed = true;
+                break;
+        }
+        return true;
     }
 
     @Override
@@ -137,5 +147,22 @@ public class GameInput implements InputProcessor {
 
     public boolean getGridState() {
         return gridState;
+    }
+
+
+    public boolean isLeftPressed() {
+        boolean leftPressed = this.leftPressed;
+        this.leftPressed = false;
+        return leftPressed;
+    }
+
+    public boolean isRightPressed() {
+        boolean rightPressed = this.rightPressed;
+        this.rightPressed = false;
+        return rightPressed;
+    }
+
+    public Vec2i getMouseCoord() {
+        return new Vec2i(mouseX, mouseY);
     }
 }

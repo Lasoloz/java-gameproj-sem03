@@ -116,6 +116,7 @@ public class BlueprintSet {
         PlayerBlueprint player = new PlayerBlueprint(indexSprite, idleAnimation);
 
         // Additional setup:
+        addUnitInformation(player, blueprint);
 
         // Return blueprint:
         return player;
@@ -150,5 +151,16 @@ public class BlueprintSet {
         } else {
             return new SpriteWrapper(pack.findRegion(region), originX, originY);
         }
+    }
+
+
+    // Helper method for extracting unit animations and information:
+    private void addUnitInformation(
+            UnitBlueprint unitBlueprint, JsonValue blueprint
+    ) {
+        // Get speed:
+//        unitBlueprint.blueprint.getInt("steps_needed");
+        unitBlueprint.setStepsNeeded(blueprint.getInt("steps_needed"));
+        // Set up other stuff... TODO!
     }
 }

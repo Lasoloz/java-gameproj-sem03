@@ -9,7 +9,7 @@ public class MiscBlueprint extends Blueprint {
     }
 
     @Override
-    public UnitType getType() {
-        return UnitType.MISC;
+    public InstanceType getType() {
+        return InstanceType.MISC;
     }
 }

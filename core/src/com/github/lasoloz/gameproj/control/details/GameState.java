@@ -15,7 +15,7 @@ public class GameState implements Disposable {
     private OrthographicCamera camera;
     private OrthographicCamera uiCamera;
     private GameInput input;
-    private Vec2f cameraPos;
+    private Vec2i playerPos;
     private Vec2i screenSize;
     private int displayDiv;
 
@@ -23,13 +23,14 @@ public class GameState implements Disposable {
     private long startTime;
     private long displayDivChangeTime;
 
+    private boolean waitingForPlayer;
+
 
 
     public GameState(
             Vec2i screenSize,
             int displayDiv) {
         this.screenSize = screenSize.copy();
-        this.cameraPos = new Vec2f(0f, 0f);
         this.displayDiv = displayDiv;
         createCamera();
         input = new GameInput();
@@ -38,6 +39,7 @@ public class GameState implements Disposable {
         displayDivChangeTime = 0;
 
         map = new GameMap();
+        playerPos = new Vec2i(0, 0);
     }
 
     public OrthographicCamera getCamera() {
@@ -52,8 +54,17 @@ public class GameState implements Disposable {
         return input;
     }
 
-    public Vec2f getCameraPos() {
-        return cameraPos;
+    public Vec2f getRealPlayerPos() {
+        return new Vec2f(
+                playerPos.x * gridSize.x + gridSize.x / 2,
+                (map.getHeight() - playerPos.y - 1) * gridSize.y +
+                        // ^ invert vertical coordinates ('cause OpenGL)
+                        gridSize.y / 2
+        );
+    }
+
+    public Vec2i getPlayerPos() {
+        return playerPos;
     }
 
     public Vec2i getScreenSize() {
@@ -99,7 +110,12 @@ public class GameState implements Disposable {
 
 
     public boolean loadMap(String mapFileName) {
-        return map.loadMap(mapFileName);
+        if (map.loadMap(mapFileName)) {
+            playerPos = map.getOriginalPlayerPos();
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public GameMap getMap() {
@@ -114,6 +130,13 @@ public class GameState implements Disposable {
         return gridSize.getY() * map.getHeight();
     }
 
+    public boolean isWaitingForPlayer() {
+        return waitingForPlayer;
+    }
+
+    public void setWaitingForPlayer(boolean waitingForPlayer) {
+        this.waitingForPlayer = waitingForPlayer;
+    }
 
     public Vec2i getRelativeMouseGridPos() {
         Vec2f pos = input.getRelativeMouseCoord();

@@ -3,7 +3,6 @@ package com.github.lasoloz.gameproj.blueprints;
 import com.badlogic.gdx.utils.ArrayMap;
 import com.github.lasoloz.gameproj.graphics.Drawable;
 import com.github.lasoloz.gameproj.graphics.SpriteWrapper;
-import com.github.lasoloz.gameproj.math.Vec2f;
 
 public abstract class Blueprint {
     private SpriteWrapper indexImage;
@@ -35,7 +34,7 @@ public abstract class Blueprint {
         }
     }
 
-    public abstract UnitType getType();
+    public abstract InstanceType getType();
 
 
     public void setName(String name) {
@@ -49,31 +48,35 @@ public abstract class Blueprint {
         return 0;
     }
 
-    public Vec2f moveSpeed() {
-        return new Vec2f(0f, 0f);
-    }
-
-    public int meleeAttackMean() {
+    public int getStepsNeeded() {
         return 0;
     }
 
-    public int meleeAttackVar() {
+    public int getMeleeAttackMean() {
         return 0;
     }
 
-    public int rangedAttackMean() {
+    public int getMeleeAttackVar() {
         return 0;
     }
 
-    public int rangedAttackVar() {
+    public int getRangedAttackMean() {
         return 0;
     }
 
-    public int protectionMean() {
+    public int getRangedAttackVar() {
         return 0;
     }
 
-    public int protectionVar() {
+    public int getProtectionMean() {
+        return 0;
+    }
+
+    public int getProtectionVar() {
+        return 0;
+    }
+
+    public int getMaxHealth() {
         return 0;
     }
 }

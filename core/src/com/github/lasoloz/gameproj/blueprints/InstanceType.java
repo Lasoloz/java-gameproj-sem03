@@ -1,6 +1,6 @@
 package com.github.lasoloz.gameproj.blueprints;
 
-public enum UnitType {
+public enum InstanceType {
     // Static stuff:
     MISC, // Miscellaneous
     LOOT,

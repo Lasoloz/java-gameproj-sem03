@@ -5,17 +5,19 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.SerializationException;
-import com.github.lasoloz.gameproj.blueprints.BlueprintException;
-import com.github.lasoloz.gameproj.blueprints.BlueprintSet;
+import com.github.lasoloz.gameproj.blueprints.*;
 import com.github.lasoloz.gameproj.entitites.Instance;
+import com.github.lasoloz.gameproj.entitites.PlayerInstance;
 import com.github.lasoloz.gameproj.graphics.GraphicsException;
 import com.github.lasoloz.gameproj.graphics.TerrainCollection;
+import com.github.lasoloz.gameproj.math.Vec2i;
 import com.github.lasoloz.gameproj.util.ResourceLoader;
 
 public class GameMap {
     private GameMapTile[][] map;
     private TerrainCollection terrainCollection;
     private BlueprintSet blueprintSet;
+    private Vec2i originalPlayerPos;
 
     public GameMap() {
         map = null;
@@ -69,9 +71,7 @@ public class GameMap {
             Gdx.app.log("GameMap", "Blueprint data parsed!");
 
             // Parse units:
-            parseUnits(root.get("units"));
-
-            return true;
+            return parseUnits(root.get("units"));
         } catch (NullPointerException ex) {
             Gdx.app.error("GameMap", "Null element in map file!");
             return false;
@@ -106,7 +106,7 @@ public class GameMap {
         Gdx.app.log("GameMap", "Map data parsed!");
     }
 
-    private void parseUnits(JsonValue units) {
+    private boolean parseUnits(JsonValue units) {
         JsonValue unitIter = units.child;
 
         while (unitIter != null) {
@@ -114,15 +114,47 @@ public class GameMap {
             int posX = unitIter.getInt("x");
             int posY = unitIter.getInt("y");
 
-            map[posY][posX].addContent(
-                    new Instance(blueprintSet.getBlueprint(type))
-            );
+            Blueprint currentBlueprint = blueprintSet.getBlueprint(type);
+            if (currentBlueprint.getType() == InstanceType.PLAYER) {
+                if (originalPlayerPos != null) {
+                    Gdx.app.error(
+                            "GameMap",
+                            "Map cannot contain multiple player instances!"
+                    );
+                    return false;
+                }
+
+                originalPlayerPos = new Vec2i(posX, posY);
+            }
+
+            map[posY][posX].addContent(createInstance(currentBlueprint));
 
             unitIter = unitIter.next;
         }
 
         Gdx.app.log("GameMap", "Unit list parsed!");
+        if (originalPlayerPos == null) {
+            Gdx.app.error(
+                    "GameMap",
+                    "Map must contain at least one player instance!"
+            );
+            return false;
+        }
+
+        return true;
     }
+
+    private Instance createInstance(Blueprint currentBlueprint) {
+        switch (currentBlueprint.getType()) {
+            case PLAYER:
+                // I have to do a stupid thing down here :/
+                return new PlayerInstance((PlayerBlueprint) currentBlueprint);
+//            case ENEMY:
+            default:
+                return new Instance(currentBlueprint);
+        }
+    }
+
 
 
     public int getWidth() {
@@ -135,6 +167,10 @@ public class GameMap {
 
     public int getData(int x, int y) {
         return map[y][x].getTileCode();
+    }
+
+    public Vec2i getOriginalPlayerPos() {
+        return originalPlayerPos;
     }
 
 
