@@ -10,13 +10,17 @@ import com.github.lasoloz.gameproj.math.Vec2i;
 public class GameState implements Disposable {
     public final static Vec2f gridSize = new Vec2f(28f, 16f);
     public final static long STEP_TIME_DELTA = 500;
+    private final static float CAMERA_MOVEMENT_MAX_DIST = 2;
 
     private GameMap map;
 
     private OrthographicCamera camera;
     private OrthographicCamera uiCamera;
     private GameInput input;
+
     private Vec2i playerPos;
+    private Vec2f cameraPos;
+
     private Vec2i screenSize;
     private int displayDiv;
 
@@ -24,9 +28,6 @@ public class GameState implements Disposable {
 
     private long time;
     private long startTime;
-    private long displayDivChangeTime;
-
-    private boolean waitingForPlayer;
 
 
 
@@ -39,10 +40,10 @@ public class GameState implements Disposable {
         input = new GameInput();
         startTime = TimeUtils.millis();
         time = startTime;
-        displayDivChangeTime = 0;
 
         map = new GameMap();
         playerPos = new Vec2i(0, 0);
+        cameraPos = new Vec2f(0, 0);
 
         // Step time:
         stepTime = time;
@@ -71,6 +72,23 @@ public class GameState implements Disposable {
 
     public Vec2i getPlayerPos() {
         return playerPos;
+    }
+
+    public Vec2f getCameraPos() {
+        return cameraPos;
+    }
+
+    public void moveCameraTowardsPlayer() {
+        Vec2f playerPos = getRealPlayerPos();
+        float dist = cameraPos.dist(playerPos);
+        if (cameraPos.dist(playerPos) > CAMERA_MOVEMENT_MAX_DIST) {
+            float dx = playerPos.x - cameraPos.x;
+            float dy = playerPos.y - cameraPos.y;
+            float nx = dx * CAMERA_MOVEMENT_MAX_DIST / dist;
+            float ny = dy * CAMERA_MOVEMENT_MAX_DIST / dist;
+            cameraPos.x += nx;
+            cameraPos.y += ny;
+        }
     }
 
     public Vec2i getScreenSize() {
@@ -110,7 +128,6 @@ public class GameState implements Disposable {
         if (displayDiv < 8) {
             displayDiv *= 2;
             createCamera();
-            displayDivChangeTime = time;
         }
     }
 
@@ -118,7 +135,6 @@ public class GameState implements Disposable {
         if (displayDiv > 1) {
             displayDiv /= 2;
             createCamera();
-            displayDivChangeTime = time;
         }
     }
 
@@ -142,14 +158,6 @@ public class GameState implements Disposable {
 
     public float getMapHeight() {
         return gridSize.getY() * map.getHeight();
-    }
-
-    public boolean isWaitingForPlayer() {
-        return waitingForPlayer;
-    }
-
-    public void setWaitingForPlayer(boolean waitingForPlayer) {
-        this.waitingForPlayer = waitingForPlayer;
     }
 
     public Vec2i getRelativeMouseGridPos() {

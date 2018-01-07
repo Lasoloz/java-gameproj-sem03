@@ -168,26 +168,50 @@ public class GameInput implements InputProcessor {
     }
 
     public Direction getDirectionFromCoord(Vec2i screenSize) {
-        Vec2i mouseCoord = getMouseCoord();
+        int xm = mouseX - screenSize.x / 2;
+        int ym = mouseY - screenSize.y / 2;
 
-        float screenRatio = (float) screenSize.y / (float) screenSize.x;
-        float mainRatio = (float) mouseCoord.y / mouseCoord.x;
-        float secondaryRatio = (float) mouseCoord.y / (float) (
-                screenSize.x - mouseCoord.x
-        );
+        float l01 = 8f/7f;
+        float l23 = 2f/7f;
+        float m0 =  l01;
+        float m1 = -l01;
+        float m2 = -l23;
+        float m3 =  l23;
 
-        if (mainRatio > screenRatio) {
-            if (secondaryRatio > screenRatio) {
+        boolean h0 = ym > m0 * xm;
+        boolean h1 = ym > m1 * xm;
+        boolean h2 = ym > m2 * xm;
+        boolean h3 = ym > m3 * xm;
+
+
+        if (h0) {
+            if (h1) {
                 return Direction.DIR_SOUTH;
-            } else {
+            }
+
+            if (h2) {
+                return Direction.DIR_SOUTH_WEST;
+            }
+
+            if (h3) {
                 return Direction.DIR_WEST;
             }
-        } else {
-            if (secondaryRatio > screenRatio) {
-                return Direction.DIR_EAST;
-            } else {
-                return Direction.DIR_NORTH;
-            }
+
+            return Direction.DIR_NORTH_WEST;
         }
+
+        if (!h1) {
+            return Direction.DIR_NORTH;
+        }
+
+        if (!h2) {
+            return Direction.DIR_NORTH_EAST;
+        }
+
+        if (!h3) {
+            return Direction.DIR_EAST;
+        }
+
+        return Direction.DIR_SOUTH_EAST;
     }
 }

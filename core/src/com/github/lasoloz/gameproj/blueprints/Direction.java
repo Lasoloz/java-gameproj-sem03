@@ -3,10 +3,15 @@ package com.github.lasoloz.gameproj.blueprints;
 import com.github.lasoloz.gameproj.math.Vec2i;
 
 public enum Direction {
+    DIR_NODIR,
     DIR_NORTH,
     DIR_EAST,
     DIR_WEST,
-    DIR_SOUTH;
+    DIR_SOUTH,
+    DIR_NORTH_EAST,
+    DIR_SOUTH_EAST,
+    DIR_SOUTH_WEST,
+    DIR_NORTH_WEST;
 
     public static Action mapMoveAction(Direction direction) {
         switch (direction) {
@@ -47,9 +52,17 @@ public enum Direction {
                 return new Vec2i(0, +1);
             case DIR_WEST:
                 return new Vec2i(-1, 0);
+            case DIR_NORTH_EAST:
+                return new Vec2i(+1 ,-1);
+            case DIR_SOUTH_EAST:
+                return new Vec2i(+1, +1);
+            case DIR_SOUTH_WEST:
+                return new Vec2i(-1, +1);
+            case DIR_NORTH_WEST:
+                return new Vec2i(-1, -1);
+            default:
+                return new Vec2i(0, 0);
         }
-
-        return new Vec2i(0, 0);
     }
 
     public Action getMoveAction() {

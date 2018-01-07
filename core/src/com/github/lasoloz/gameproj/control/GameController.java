@@ -20,6 +20,7 @@ public class GameController extends Subject {
     @Override
     public void update() {
         gameState.updateTime();
+        gameState.moveCameraTowardsPlayer();
 
         updateUnits();
 
@@ -55,7 +56,7 @@ public class GameController extends Subject {
         // Get field renderer camera, and update based on player position:
         GameInput input = gameState.getInput();
         Vec2f f = input.getCameraFocus(
-                gameState.getRealPlayerPos(),
+                gameState.getCameraPos(),
                 gameState.getScreenSize(),
                 gameState.getDisplayDiv()
         );
@@ -82,6 +83,7 @@ public class GameController extends Subject {
                 Direction moveDirection = gameInput.getDirectionFromCoord(
                         gameState.getScreenSize()
                 );
+
                 Vec2i playerPos = gameState.getPlayerPos();
                 if (UnitLogic.movePlayer(
                         gameState, playerPos, moveDirection
