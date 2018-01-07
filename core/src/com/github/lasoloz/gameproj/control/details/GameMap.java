@@ -169,6 +169,10 @@ public class GameMap {
         return map[y][x].getTileCode();
     }
 
+    public int getData(Vec2i pos) {
+        return map[pos.y][pos.x].getTileCode();
+    }
+
     public Vec2i getOriginalPlayerPos() {
         return originalPlayerPos;
     }
@@ -178,11 +182,21 @@ public class GameMap {
         return map[y][x].getContent();
     }
 
-    public GameMapTile getGameMapTile(int x, int y) {
-        return map[y][x];
+    public GameMapTile getGameMapTile(Vec2i pos) {
+        return map[pos.y][pos.x];
     }
 
     public TerrainCollection getTerrainCollection() {
         return terrainCollection;
+    }
+
+
+    public boolean inMap(Vec2i pos) {
+        // Check if a position is in the map
+        return !(pos.x < 0 ||
+                pos.x > map[0].length ||
+                pos.y < 0 ||
+                pos.y > map.length
+        );
     }
 }

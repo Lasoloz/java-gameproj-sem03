@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.github.lasoloz.gameproj.blueprints.Direction;
 import com.github.lasoloz.gameproj.control.details.GameState;
 import com.github.lasoloz.gameproj.control.details.Subject;
+import com.github.lasoloz.gameproj.entitites.Instance;
+import com.github.lasoloz.gameproj.entitites.PlayerInstance;
 import com.github.lasoloz.gameproj.math.Vec2f;
 import com.github.lasoloz.gameproj.math.Vec2i;
 
@@ -72,40 +74,25 @@ public class GameController extends Subject {
 
 
     private void updateUnits() {
-        if (gameState.isWaitingForPlayer()) {
+        if (gameState.readyForStep()) {
             // Check, if player did something (mouse click)
             GameInput gameInput = gameState.getInput();
 
             if (gameInput.isLeftPressed()) {
-                System.out.println(getDirectionFromCoord());
+                Direction moveDirection = gameInput.getDirectionFromCoord(
+                        gameState.getScreenSize()
+                );
+                Vec2i playerPos = gameState.getPlayerPos();
+                if (UnitLogic.movePlayer(
+                        gameState, playerPos, moveDirection
+                )) {
+                    gameState.step();
+                }
             }
         } else {
             UnitLogic.updateUnits(gameState);
         }
     }
 
-    private Direction getDirectionFromCoord() {
-        Vec2i mouseCoord = gameState.getInput().getMouseCoord();
-        Vec2i screenSize = gameState.getScreenSize();
 
-        float screenRatio = (float) screenSize.y / (float) screenSize.x;
-        float mainRatio = (float) mouseCoord.y / mouseCoord.x;
-        float secondaryRatio = (float) mouseCoord.y / (float) (
-                screenSize.x - mouseCoord.x
-        );
-
-        if (mainRatio > screenRatio) {
-            if (secondaryRatio > screenRatio) {
-                return Direction.DIR_SOUTH;
-            } else {
-                return Direction.DIR_WEST;
-            }
-        } else {
-            if (secondaryRatio > screenRatio) {
-                return Direction.DIR_EAST;
-            } else {
-                return Direction.DIR_NORTH;
-            }
-        }
-    }
 }

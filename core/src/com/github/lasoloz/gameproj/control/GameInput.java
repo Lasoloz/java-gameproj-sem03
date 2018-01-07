@@ -2,6 +2,7 @@ package com.github.lasoloz.gameproj.control;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.github.lasoloz.gameproj.blueprints.Direction;
 import com.github.lasoloz.gameproj.math.Vec2f;
 import com.github.lasoloz.gameproj.math.Vec2i;
 
@@ -164,5 +165,29 @@ public class GameInput implements InputProcessor {
 
     public Vec2i getMouseCoord() {
         return new Vec2i(mouseX, mouseY);
+    }
+
+    public Direction getDirectionFromCoord(Vec2i screenSize) {
+        Vec2i mouseCoord = getMouseCoord();
+
+        float screenRatio = (float) screenSize.y / (float) screenSize.x;
+        float mainRatio = (float) mouseCoord.y / mouseCoord.x;
+        float secondaryRatio = (float) mouseCoord.y / (float) (
+                screenSize.x - mouseCoord.x
+        );
+
+        if (mainRatio > screenRatio) {
+            if (secondaryRatio > screenRatio) {
+                return Direction.DIR_SOUTH;
+            } else {
+                return Direction.DIR_WEST;
+            }
+        } else {
+            if (secondaryRatio > screenRatio) {
+                return Direction.DIR_EAST;
+            } else {
+                return Direction.DIR_NORTH;
+            }
+        }
     }
 }

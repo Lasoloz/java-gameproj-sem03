@@ -27,7 +27,7 @@ public abstract class Blueprint {
 
     public Drawable getActionImage(Action action) {
         /// TODO: Create a better data structure for this:
-        if (!actionDrawableMap.containsKey(action)) {
+        if (actionDrawableMap.containsKey(action)) {
             return actionDrawableMap.get(action);
         } else {
             return actionDrawableMap.get(Action.ACT_IDLE);

@@ -1,5 +1,7 @@
 package com.github.lasoloz.gameproj.blueprints;
 
+import com.github.lasoloz.gameproj.math.Vec2i;
+
 public enum Direction {
     DIR_NORTH,
     DIR_EAST,
@@ -35,11 +37,30 @@ public enum Direction {
         return Action.ACT_IDLE;
     }
 
+    public static Vec2i mapMoveBaseVector(Direction direction) {
+        switch (direction) {
+            case DIR_NORTH:
+                return new Vec2i(0, -1);
+            case DIR_EAST:
+                return new Vec2i(+1, 0);
+            case DIR_SOUTH:
+                return new Vec2i(0, +1);
+            case DIR_WEST:
+                return new Vec2i(-1, 0);
+        }
+
+        return new Vec2i(0, 0);
+    }
+
     public Action getMoveAction() {
         return mapMoveAction(this);
     }
 
     public Action getAttackAction() {
         return mapAttackAction(this);
+    }
+
+    public Vec2i getMoveBaseVector() {
+        return mapMoveBaseVector(this);
     }
 }

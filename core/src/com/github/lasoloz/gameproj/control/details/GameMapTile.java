@@ -7,6 +7,7 @@ public class GameMapTile {
     private int tileCode;
     private Instance content;
     private Vec2f relativePos;
+    private boolean occupied;
 
     public GameMapTile(int tileCode) {
         /// TODO: Create enum type for tile code
@@ -18,6 +19,8 @@ public class GameMapTile {
 
         content = null;
         relativePos = new Vec2f(0f, 0f);
+
+        occupied = false;
     }
 
     public int getTileCode() {
@@ -29,20 +32,30 @@ public class GameMapTile {
     }
 
     public void addContent(Instance content) {
+        occupied = true;
         this.content = content;
     }
 
-    public void removeContet() {
+    public void removeContent() {
+        occupied = false;
         this.content = null;
     }
 
     public void moveContent(GameMapTile other) {
         other.addContent(this.content);
-        removeContet();
+        removeContent();
     }
 
 
     public Vec2f getRelativePos() {
         return relativePos;
+    }
+
+    public boolean isOccupied() {
+        return occupied;
+    }
+
+    public void markOccupied() {
+        this.occupied = true;
     }
 }

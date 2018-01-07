@@ -70,7 +70,7 @@ public class InfoRenderer implements Observer, Disposable {
         if (gameState.isWaitingForPlayer()) {
             message += " - Please, perform action!";
         } else {
-            message += " - Performing commands...";
+            message += " - Performing command...";
         }
 
         int length = gameState.getScreenSize().x - BORDERS * 2;

@@ -9,6 +9,7 @@ import com.github.lasoloz.gameproj.math.Vec2i;
 
 public class GameState implements Disposable {
     public final static Vec2f gridSize = new Vec2f(28f, 16f);
+    public final static long STEP_TIME_DELTA = 500;
 
     private GameMap map;
 
@@ -18,6 +19,8 @@ public class GameState implements Disposable {
     private Vec2i playerPos;
     private Vec2i screenSize;
     private int displayDiv;
+
+    private long stepTime;
 
     private long time;
     private long startTime;
@@ -40,6 +43,9 @@ public class GameState implements Disposable {
 
         map = new GameMap();
         playerPos = new Vec2i(0, 0);
+
+        // Step time:
+        stepTime = time;
     }
 
     public OrthographicCamera getCamera() {
@@ -81,6 +87,14 @@ public class GameState implements Disposable {
 
     public float getStateTime() {
         return (time - startTime) / 1000f;
+    }
+
+    public boolean readyForStep() {
+        return time - stepTime > STEP_TIME_DELTA;
+    }
+
+    public void step() {
+        stepTime = time;
     }
 
     public void updateTime() {

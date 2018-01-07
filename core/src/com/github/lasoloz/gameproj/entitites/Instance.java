@@ -3,6 +3,7 @@ package com.github.lasoloz.gameproj.entitites;
 import com.github.lasoloz.gameproj.blueprints.Action;
 import com.github.lasoloz.gameproj.blueprints.Blueprint;
 import com.github.lasoloz.gameproj.blueprints.Direction;
+import com.github.lasoloz.gameproj.math.Vec2f;
 
 public class Instance {
     protected Blueprint blueprint;
@@ -33,7 +34,7 @@ public class Instance {
     }
 
     public boolean moveFinished() {
-        return true;
+        return false;
     }
 
     // Enemy players will have simple artificial intelligence
@@ -41,4 +42,9 @@ public class Instance {
 
 
     public void update() {}
+
+
+    public Vec2f getFinalPosition(Vec2f position) {
+        return position.copy();
+    }
 }

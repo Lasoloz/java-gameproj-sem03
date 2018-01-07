@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import com.github.lasoloz.gameproj.blueprints.Action;
 import com.github.lasoloz.gameproj.blueprints.Blueprint;
+import com.github.lasoloz.gameproj.blueprints.Direction;
 import com.github.lasoloz.gameproj.control.details.GameMap;
 import com.github.lasoloz.gameproj.control.details.GameState;
 import com.github.lasoloz.gameproj.control.details.Observer;
@@ -102,9 +103,9 @@ public class FieldRenderer implements Observer, Disposable {
 
 
                 // Draw instances:
-                Instance unit = map.getInstance(j, i);
-                if (unit != null) {
-                    Blueprint bp = unit.getBlueprint();
+                Instance instance = map.getInstance(j, i);
+                if (instance != null) {
+                    Blueprint bp = instance.getBlueprint();
                     Drawable sp = bp.getActionImage(Action.ACT_IDLE);
                     sp.draw(spriteBatch, iter, time);
                 }

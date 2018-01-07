@@ -4,14 +4,14 @@ import com.github.lasoloz.gameproj.graphics.Drawable;
 import com.github.lasoloz.gameproj.graphics.SpriteWrapper;
 
 public abstract class UnitBlueprint extends Blueprint {
-    protected int stepsNeeded;
-    protected int meleeAttackMean;
-    protected int meleeAttackVar;
-    protected int rangedAttackMean;
-    protected int rangedAttackVar;
-    protected int protectionMean;
-    protected int protectionVar;
-    protected int maxHealth;
+    private int stepsNeeded;
+    private int meleeAttackMean;
+    private int meleeAttackVar;
+    private int rangedAttackMean;
+    private int rangedAttackVar;
+    private int protectionMean;
+    private int protectionVar;
+    private int maxHealth;
 
 
     UnitBlueprint(SpriteWrapper indexImage, Drawable idleAction) {
