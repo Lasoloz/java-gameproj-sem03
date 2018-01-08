@@ -171,6 +171,10 @@ public class GameInput implements InputProcessor {
         int xm = mouseX - screenSize.x / 2;
         int ym = mouseY - screenSize.y / 2;
 
+        if (Math.abs(xm) < 28 && Math.abs(ym) < 16) {
+            return Direction.DIR_NODIR;
+        }
+
         float l01 = 8f/7f;
         float l23 = 2f/7f;
         float m0 =  l01;

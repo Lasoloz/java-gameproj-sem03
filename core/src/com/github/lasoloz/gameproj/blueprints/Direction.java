@@ -13,6 +13,8 @@ public enum Direction {
     DIR_SOUTH_WEST,
     DIR_NORTH_WEST;
 
+    public static final int DIRCOUNT = 8;
+
     public static Action mapMoveAction(Direction direction) {
         switch (direction) {
             case DIR_NORTH:

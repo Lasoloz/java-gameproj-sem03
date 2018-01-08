@@ -90,6 +90,46 @@ loot/gold_bar/gold_bar
   index: 11
 
 default_blueprint_assets2.png
+size: 32,16
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+enemies/gnome/gnome_idle
+  rotate: false
+  xy: 2, 2
+  size: 6, 12
+  orig: 6, 12
+  offset: 0, 0
+  index: 0
+enemies/gnome/gnome_idle
+  rotate: false
+  xy: 10, 2
+  size: 6, 12
+  orig: 6, 12
+  offset: 0, 0
+  index: 1
+
+default_blueprint_assets3.png
+size: 64,32
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+enemies/scorpion/scorpion_idle
+  rotate: false
+  xy: 2, 2
+  size: 28, 28
+  orig: 28, 28
+  offset: 0, 0
+  index: 0
+enemies/scorpion/scorpion_idle
+  rotate: false
+  xy: 32, 2
+  size: 28, 28
+  orig: 28, 28
+  offset: 0, 0
+  index: 1
+
+default_blueprint_assets4.png
 size: 32,128
 format: RGBA8888
 filter: Nearest,Nearest
@@ -137,7 +177,7 @@ misc/torch/sprite
   offset: 0, 0
   index: 5
 
-default_blueprint_assets3.png
+default_blueprint_assets5.png
 size: 64,128
 format: RGBA8888
 filter: Nearest,Nearest

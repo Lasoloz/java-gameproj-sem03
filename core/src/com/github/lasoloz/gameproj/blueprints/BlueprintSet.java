@@ -113,13 +113,31 @@ public class BlueprintSet {
         Drawable idleAnimation = extractIdle(blueprint);
 
         // Create blueprint for player class:
-        PlayerBlueprint player = new PlayerBlueprint(indexSprite, idleAnimation);
+        UnitBlueprint unit = createUnitBlueprint(
+                blueprint,
+                indexSprite,
+                idleAnimation
+        );
 
         // Additional setup:
-        addUnitInformation(player, blueprint);
+        addUnitInformation(unit, blueprint);
 
         // Return blueprint:
-        return player;
+        return unit;
+    }
+
+
+    private UnitBlueprint createUnitBlueprint(
+            JsonValue blueprint,
+            SpriteWrapper indexSprite,
+            Drawable idleAnimation
+    ) {
+        // Check, if there is player or enemy blueprint:
+        if (blueprint.getString("type").equals("player")) {
+            return new PlayerBlueprint(indexSprite, idleAnimation);
+        } else {
+            return new EnemyBlueprint(indexSprite, idleAnimation);
+        }
     }
 
 
@@ -160,7 +178,7 @@ public class BlueprintSet {
     ) {
         // Get speed:
 //        unitBlueprint.blueprint.getInt("steps_needed");
-        unitBlueprint.setStepsNeeded(blueprint.getInt("steps_needed"));
+//        unitBlueprint.setStepsNeeded(blueprint.getInt("steps_needed"));
         // Set up other stuff... TODO!
     }
 }

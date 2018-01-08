@@ -34,14 +34,53 @@
       "origin_y": 4,
       "anim_speed": 1
     },
-    "steps_needed": 3,
     "max_health": 30,
-    "attack": {
+    "stats": {
       "melee_attack_mean": 5,
       "melee_attack_var": 1,
       "ranged_attack_mean": 0,
       "ranged_attack_var": 0,
       "protection_mean": 3,
+      "protection_var": 1
+    }
+  }, {
+    "type": "enemy",
+    "name": "Giant Scorpion",
+    "index": "enemies/scorpion/scorpion_idle",
+    "idle": {
+      "type": "animation",
+      "region": "enemies/scorpion/scorpion_idle",
+      "origin_x": 0,
+      "origin_y": 0,
+      "anim_speed": 1
+    },
+    "max_health": 15,
+    "stats": {
+      "melee_attack_mean": 12,
+      "melee_attack_var": 3,
+      "ranged_attack_mean": 0,
+      "ranged_attack_var": 0,
+      "protection_mean": 1,
+      "protection_var": 0
+    }
+  }, {
+    "type": "gnome",
+    "name": "Gnome",
+    "index": "enemies/gnome/gnome_idle",
+    "idle": {
+      "type": "animation",
+      "region": "enemies/gnome/gnome_idle",
+      "origin_x": 11,
+      "origin_y": 4,
+      "anim_speed": 1
+    },
+    "max_health": 4,
+    "stats": {
+      "melee_attack_mean": 3,
+      "melee_attack_var": 1,
+      "ranged_attack_mean": 0,
+      "ranged_attack_var": 0,
+      "protection_mean": 1,
       "protection_var": 1
     }
   }]

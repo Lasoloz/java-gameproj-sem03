@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.github.lasoloz.gameproj.control.GameInput;
+import com.github.lasoloz.gameproj.graphics.CursorSet;
 import com.github.lasoloz.gameproj.math.Vec2f;
 import com.github.lasoloz.gameproj.math.Vec2i;
 
@@ -28,6 +29,9 @@ public class GameState implements Disposable {
 
     private long time;
     private long startTime;
+
+
+    private CursorSet cursorSet; // Note! Disposed in main class!
 
 
 
@@ -142,6 +146,7 @@ public class GameState implements Disposable {
     public boolean loadMap(String mapFileName) {
         if (map.loadMap(mapFileName)) {
             playerPos = map.getOriginalPlayerPos();
+            cameraPos = getRealPlayerPos();
             return true;
         } else {
             return false;
@@ -178,5 +183,14 @@ public class GameState implements Disposable {
                 screenSize.y / displayDiv
         );
         uiCamera = new OrthographicCamera(screenSize.x, screenSize.y);
+    }
+
+
+    public void addCursorSet(CursorSet cursorSet) {
+        this.cursorSet = cursorSet;
+    }
+
+    public CursorSet getCursorSet() {
+        return cursorSet;
     }
 }

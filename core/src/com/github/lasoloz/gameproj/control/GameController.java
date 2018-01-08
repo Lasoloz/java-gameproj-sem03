@@ -78,21 +78,26 @@ public class GameController extends Subject {
         if (gameState.readyForStep()) {
             // Check, if player did something (mouse click)
             GameInput gameInput = gameState.getInput();
+            Direction moveDirection = gameInput.getDirectionFromCoord(
+                    gameState.getScreenSize()
+            );
+
+            Gdx.graphics.setCursor(gameState.getCursorSet().getDirCursor(
+                    moveDirection)
+            );
 
             if (gameInput.isLeftPressed()) {
-                Direction moveDirection = gameInput.getDirectionFromCoord(
-                        gameState.getScreenSize()
-                );
 
                 Vec2i playerPos = gameState.getPlayerPos();
                 if (UnitLogic.movePlayer(
                         gameState, playerPos, moveDirection
                 )) {
                     gameState.step();
+                    Gdx.graphics.setCursor(
+                            gameState.getCursorSet().getMainCursor()
+                    );
                 }
             }
-        } else {
-            UnitLogic.updateUnits(gameState);
         }
     }
 

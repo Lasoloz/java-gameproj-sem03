@@ -2,12 +2,14 @@ package com.github.lasoloz.gameproj;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.github.lasoloz.gameproj.control.FieldRenderer;
 import com.github.lasoloz.gameproj.control.GameController;
 import com.github.lasoloz.gameproj.control.InfoRenderer;
 import com.github.lasoloz.gameproj.control.details.GameState;
+import com.github.lasoloz.gameproj.graphics.CursorSet;
 import com.github.lasoloz.gameproj.math.Vec2i;
 
 
@@ -16,6 +18,8 @@ public class GameProj extends ApplicationAdapter {
     private GameController gameController;
     private FieldRenderer fieldRenderer;
     private InfoRenderer infoRenderer;
+
+    private CursorSet cursorSet;
 
     private FPSLogger fpsLogger;
 
@@ -32,6 +36,9 @@ public class GameProj extends ApplicationAdapter {
             Gdx.app.error("GameProj", "Failed to load map!");
             Gdx.app.exit();
         }
+        cursorSet = new CursorSet("other/");
+        gameState.addCursorSet(cursorSet);
+
         gameController = new GameController(gameState);
         fieldRenderer = new FieldRenderer();
         infoRenderer = new InfoRenderer();
@@ -63,5 +70,6 @@ public class GameProj extends ApplicationAdapter {
         infoRenderer.dispose();
         fieldRenderer.dispose();
         gameState.dispose();
+        cursorSet.dispose();
     }
 }
