@@ -79,4 +79,8 @@ public abstract class Blueprint {
     public int getMaxHealth() {
         return 0;
     }
+
+    public int getRange() {
+        return 0;
+    }
 }

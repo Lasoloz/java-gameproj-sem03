@@ -47,4 +47,9 @@ public class Instance {
     public Vec2f getFinalPosition(Vec2f position) {
         return position.copy();
     }
+
+
+    public String getInfo() {
+        return blueprint.getInfo();
+    }
 }

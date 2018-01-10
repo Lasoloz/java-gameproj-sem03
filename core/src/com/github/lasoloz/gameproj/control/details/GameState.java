@@ -10,7 +10,7 @@ import com.github.lasoloz.gameproj.math.Vec2i;
 
 public class GameState implements Disposable {
     public final static Vec2f gridSize = new Vec2f(28f, 16f);
-    public final static long STEP_TIME_DELTA = 500;
+    public final static long STEP_TIME_DELTA = 250;
     private final static float CAMERA_MOVEMENT_MAX_DIST = 2;
 
     private GameMap map;

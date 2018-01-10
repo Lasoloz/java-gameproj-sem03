@@ -12,6 +12,7 @@ public abstract class UnitBlueprint extends Blueprint {
     private int protectionMean;
     private int protectionVar;
     private int maxHealth;
+    private int range;
 
 
     UnitBlueprint(SpriteWrapper indexImage, Drawable idleAction) {
@@ -89,5 +90,23 @@ public abstract class UnitBlueprint extends Blueprint {
 
     public void setMaxHealth(int maxHealth) {
         this.maxHealth = maxHealth;
+    }
+
+
+    @Override
+    public String getInfo() {
+        return super.getInfo() + " - attack: " + meleeAttackMean + "(±" +
+                meleeAttackVar + ") - protection: " + protectionMean + "(±" +
+                protectionVar + ")";
+    }
+
+
+    public void setRange(int range) {
+        this.range = range;
+    }
+
+    @Override
+    public int getRange() {
+        return range;
     }
 }

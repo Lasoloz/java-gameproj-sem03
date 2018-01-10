@@ -8,7 +8,7 @@ public class DesktopLauncher {
     public static void main (String[] arg) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 
-        config.title = "Game Project Prototype";
+        config.title = "The Secret Dungeon";
         config.width = 1024;
         config.height = 768;
         new LwjglApplication(new GameProj(), config);

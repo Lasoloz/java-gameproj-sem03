@@ -176,9 +176,19 @@ public class BlueprintSet {
     private void addUnitInformation(
             UnitBlueprint unitBlueprint, JsonValue blueprint
     ) {
-        // Get speed:
-//        unitBlueprint.blueprint.getInt("steps_needed");
-//        unitBlueprint.setStepsNeeded(blueprint.getInt("steps_needed"));
-        // Set up other stuff... TODO!
+        // Get health:
+        unitBlueprint.setMaxHealth(blueprint.getInt("max_health"));
+
+        // Get range:
+        unitBlueprint.setRange(blueprint.getInt("range"));
+
+        // Get attack and protection stats:
+        JsonValue stats = blueprint.get("stats");
+        unitBlueprint.setMeleeAttackMean(stats.getInt("melee_attack_mean"));
+        unitBlueprint.setMeleeAttackVar(stats.getInt("melee_attack_var"));
+        unitBlueprint.setRangedAttackMean(stats.getInt("ranged_attack_mean"));
+        unitBlueprint.setRangedAttackVar(stats.getInt("ranged_attack_var"));
+        unitBlueprint.setProtectionMean(stats.getInt("protection_mean"));
+        unitBlueprint.setProtectionVar(stats.getInt("protection_var"));
     }
 }

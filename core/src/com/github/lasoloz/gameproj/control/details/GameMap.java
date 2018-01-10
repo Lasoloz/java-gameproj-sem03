@@ -8,8 +8,10 @@ import com.badlogic.gdx.utils.SerializationException;
 import com.github.lasoloz.gameproj.blueprints.*;
 import com.github.lasoloz.gameproj.entitites.Instance;
 import com.github.lasoloz.gameproj.entitites.PlayerInstance;
+import com.github.lasoloz.gameproj.entitites.UnitInstance;
 import com.github.lasoloz.gameproj.graphics.GraphicsException;
 import com.github.lasoloz.gameproj.graphics.TerrainCollection;
+import com.github.lasoloz.gameproj.math.Vec2f;
 import com.github.lasoloz.gameproj.math.Vec2i;
 import com.github.lasoloz.gameproj.util.ResourceLoader;
 
@@ -147,9 +149,9 @@ public class GameMap {
     private Instance createInstance(Blueprint currentBlueprint) {
         switch (currentBlueprint.getType()) {
             case PLAYER:
+            case ENEMY:
                 // I have to do a stupid thing down here :/
-                return new PlayerInstance((PlayerBlueprint) currentBlueprint);
-//            case ENEMY:
+                return new UnitInstance((UnitBlueprint) currentBlueprint);
             default:
                 return new Instance(currentBlueprint);
         }
@@ -184,6 +186,10 @@ public class GameMap {
 
     public GameMapTile getGameMapTile(Vec2i pos) {
         return map[pos.y][pos.x];
+    }
+
+    public GameMapTile getGameMapTile(int x, int y) {
+        return map[y][x];
     }
 
     public TerrainCollection getTerrainCollection() {

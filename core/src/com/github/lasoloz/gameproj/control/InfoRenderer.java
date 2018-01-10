@@ -65,12 +65,12 @@ public class InfoRenderer implements Observer, Disposable {
             message += getInstanceInformation(instance);
         }
 
-        // Get information about game state:
-        if (gameState.readyForStep()) {
-            message += " - Please, perform action!";
-        } else {
-            message += " - Performing command...";
-        }
+//        // Get information about game state:
+//        if (gameState.readyForStep()) {
+//            message += " - Please, perform action!";
+//        } else {
+//            message += " - Performing command...";
+//        }
 
         int length = gameState.getScreenSize().x - BORDERS * 2;
 
@@ -112,7 +112,8 @@ public class InfoRenderer implements Observer, Disposable {
         }
 
         // Otherwise return information:
-        return " " + instance.getBlueprint().getInfo();
+        return " " + instance.getInfo();
+//        return " " + instance.getBlueprint().getInfo();
     }
 
     @Override

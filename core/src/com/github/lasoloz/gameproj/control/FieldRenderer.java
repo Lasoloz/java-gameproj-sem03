@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -12,32 +14,38 @@ import com.github.lasoloz.gameproj.blueprints.Action;
 import com.github.lasoloz.gameproj.blueprints.Blueprint;
 import com.github.lasoloz.gameproj.blueprints.Direction;
 import com.github.lasoloz.gameproj.control.details.GameMap;
+import com.github.lasoloz.gameproj.control.details.GameMapTile;
 import com.github.lasoloz.gameproj.control.details.GameState;
 import com.github.lasoloz.gameproj.control.details.Observer;
 import com.github.lasoloz.gameproj.entitites.Instance;
 import com.github.lasoloz.gameproj.graphics.Drawable;
+import com.github.lasoloz.gameproj.graphics.SpriteWrapper;
 import com.github.lasoloz.gameproj.graphics.TerrainCollection;
 import com.github.lasoloz.gameproj.graphics.TerrainSet;
 import com.github.lasoloz.gameproj.math.Vec2f;
 import com.github.lasoloz.gameproj.math.Vec2i;
+import com.github.lasoloz.gameproj.util.ResourceLoader;
 
 public class FieldRenderer implements Observer, Disposable {
     private SpriteBatch spriteBatch; // For drawing terrain
     private ShapeRenderer shapeRenderer; // For drawing grid:
 
+    private Texture notSeenMask;
+
     public FieldRenderer() {
         spriteBatch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
+        // TODO: Reformat the loading of the mask!
+        notSeenMask = new Texture("other/not_seen_mask.png");
     }
 
     @Override
     public void update(GameState gameState) {
         // Draw game field on update:
-        spriteBatch.setProjectionMatrix(gameState.getCamera().combined);
-        spriteBatch.begin();
+
         // Draw map terrain data and units:
         renderMap(gameState);
-        spriteBatch.end();
+
 
         // Draw grid on request:
         if (gameState.getInput().getGridState()) {
@@ -66,60 +74,89 @@ public class FieldRenderer implements Observer, Disposable {
         Vec2f topLeft = new Vec2f(0, (height - 1) * GameState.gridSize.getY());
         Vec2f iter = topLeft.copy();
 
+
+        // Set up drawing batches and renderers:
+        OrthographicCamera camera = gameState.getCamera();
+        spriteBatch.setProjectionMatrix(camera.combined);
+        spriteBatch.begin();
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+
+
         // Iterate through map data:
         for (int i = 0; i < height; ++i) {
             for (int j = 0; j < width; ++j) {
                 // Get one of the terrain sets:
                 TerrainSet current = terrainCollection.getSet(i + 3*j);
-                int data = map.getData(j, i);
+                GameMapTile tile = map.getGameMapTile(j, i);
 
-                // Draw terrain:
-                switch (data) {
-                    case TerrainSet.GROUND_TYPE:
-                        current.drawGround(spriteBatch, iter, time);
-                        break;
-                    case TerrainSet.WALL_TYPE:
-                        current.drawWall(spriteBatch, iter, time);
-                        break;
-                    case TerrainSet.VOID_TYPE:
-                        // Northern parts of voids (different texture):
-                        boolean voidN;
-                        if (i < 1) {
-                            voidN = false;
-                        } else {
-                            int topData = map.getData(j, i - 1);
-                            voidN = topData != TerrainSet.VOID_TYPE;
-                        }
+                /// TODO: Reformat this mess down there VVVV!
+                if (tile.isKnown()) {
+                    int data = map.getData(j, i);
 
-                        if (voidN) {
-                            current.drawVoidN(spriteBatch, iter, time);
-                        } else {
-                            current.drawVoid(spriteBatch, iter, time);
+                    // Draw terrain:
+                    switch (data) {
+                        case TerrainSet.GROUND_TYPE:
+                            current.drawGround(spriteBatch, iter, time);
+                            break;
+                        case TerrainSet.WALL_TYPE:
+                            current.drawWall(spriteBatch, iter, time);
+                            break;
+                        case TerrainSet.VOID_TYPE:
+                            // Northern parts of voids (different texture):
+                            boolean voidN;
+                            if (i < 1) {
+                                voidN = false;
+                            } else {
+                                int topData = map.getData(j, i - 1);
+                                voidN = topData != TerrainSet.VOID_TYPE;
+                            }
+
+                            if (voidN) {
+                                current.drawVoidN(spriteBatch, iter, time);
+                            } else {
+                                current.drawVoid(spriteBatch, iter, time);
+                            }
+                            break;
+                        default:
+                            // Do nothing... Reformat this, please (myself)!
+                    }
+
+
+                    // Is tile seen, or not?
+                    if (tile.isSeen()) {
+                        // Draw instances:
+                        Instance instance = map.getInstance(j, i);
+                        if (instance != null) {
+                            Blueprint bp = instance.getBlueprint();
+                            Drawable sp = bp.getActionImage(Action.ACT_IDLE);
+                            sp.draw(spriteBatch, iter, time);
                         }
-                        break;
-                    default:
-                        // Do nothing... Reformat this, please (myself)!
+                    } else {
+                        // Draw not seen mask:
+                        spriteBatch.draw(
+                                notSeenMask,
+                                iter.x,
+                                iter.y,
+                                GameState.gridSize.x,
+                                GameState.gridSize.y
+                        );
+                    }
                 }
 
 
-                // Draw instances:
-                Instance instance = map.getInstance(j, i);
-                if (instance != null) {
-                    Blueprint bp = instance.getBlueprint();
-                    Drawable sp = bp.getActionImage(Action.ACT_IDLE);
-                    sp.draw(spriteBatch, iter, time);
-                }
-
-
-                // Iterate position horizontally:
+                // Iterate on position horizontally:
                 iter.addToX(GameState.gridSize.getX());
             }
 
-            // Iterate position vertically:
+            // Iterate on position vertically:
             iter.setX(0f);
             iter.addToY(-GameState.gridSize.getY());
         }
+
+        // End of drawing:
+        spriteBatch.end();
     }
+
 
     private void drawGrid(GameState gameState) {
         // Get camera and screen dimensions:

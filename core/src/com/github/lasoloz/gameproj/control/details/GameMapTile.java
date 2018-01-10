@@ -8,6 +8,8 @@ public class GameMapTile {
     private Instance content;
     private Vec2f relativePos;
     private boolean occupied;
+    private boolean seen;
+    private boolean known;
 
     public GameMapTile(int tileCode) {
         /// TODO: Create enum type for tile code
@@ -57,5 +59,22 @@ public class GameMapTile {
 
     public void markOccupied() {
         this.occupied = true;
+    }
+
+
+    public boolean isSeen() {
+        return seen;
+    }
+
+    public void setSeen(boolean seen) {
+        this.seen = seen;
+    }
+
+    public boolean isKnown() {
+        return known;
+    }
+
+    public void setKnown(boolean known) {
+        this.known = known;
     }
 }
