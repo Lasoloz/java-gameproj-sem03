@@ -4,7 +4,11 @@ import com.badlogic.gdx.utils.ArrayMap;
 import com.github.lasoloz.gameproj.graphics.Drawable;
 import com.github.lasoloz.gameproj.graphics.SpriteWrapper;
 
+import java.util.Random;
+
 public abstract class Blueprint {
+    public static Random rnd = new Random(System.currentTimeMillis());
+
     private SpriteWrapper indexImage;
     private String name;
 
@@ -82,5 +86,18 @@ public abstract class Blueprint {
 
     public int getRange() {
         return 0;
+    }
+
+
+    public int getRandomDamage() {
+        return randomNormal(getMeleeAttackMean(), getMeleeAttackVar());
+    }
+
+    public int getRandomProtection() {
+        return randomNormal(getProtectionMean(), getProtectionVar());
+    }
+
+    private int randomNormal(int mean, int var) {
+        return mean - var + rnd.nextInt(2 * var + 1);
     }
 }

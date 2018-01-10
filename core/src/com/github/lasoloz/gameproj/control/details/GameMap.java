@@ -7,11 +7,9 @@ import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.SerializationException;
 import com.github.lasoloz.gameproj.blueprints.*;
 import com.github.lasoloz.gameproj.entitites.Instance;
-import com.github.lasoloz.gameproj.entitites.PlayerInstance;
 import com.github.lasoloz.gameproj.entitites.UnitInstance;
 import com.github.lasoloz.gameproj.graphics.GraphicsException;
 import com.github.lasoloz.gameproj.graphics.TerrainCollection;
-import com.github.lasoloz.gameproj.math.Vec2f;
 import com.github.lasoloz.gameproj.math.Vec2i;
 import com.github.lasoloz.gameproj.util.ResourceLoader;
 
@@ -21,12 +19,8 @@ public class GameMap {
     private BlueprintSet blueprintSet;
     private Vec2i originalPlayerPos;
 
-    public GameMap() {
+    /*public*/ GameMap() {
         map = null;
-    }
-
-    public boolean isLoaded() {
-        return map != null;
     }
 
 
@@ -200,9 +194,9 @@ public class GameMap {
     public boolean inMap(Vec2i pos) {
         // Check if a position is in the map
         return !(pos.x < 0 ||
-                pos.x > map[0].length ||
+                pos.x >= map[0].length ||
                 pos.y < 0 ||
-                pos.y > map.length
+                pos.y >= map.length
         );
     }
 }

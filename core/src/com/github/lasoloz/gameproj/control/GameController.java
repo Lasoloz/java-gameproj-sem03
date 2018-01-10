@@ -2,16 +2,18 @@ package com.github.lasoloz.gameproj.control;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.github.lasoloz.gameproj.blueprints.Blueprint;
 import com.github.lasoloz.gameproj.blueprints.Direction;
+import com.github.lasoloz.gameproj.blueprints.InstanceType;
 import com.github.lasoloz.gameproj.control.details.GameMap;
 import com.github.lasoloz.gameproj.control.details.GameMapTile;
 import com.github.lasoloz.gameproj.control.details.GameState;
 import com.github.lasoloz.gameproj.control.details.Subject;
 import com.github.lasoloz.gameproj.entitites.Instance;
-import com.github.lasoloz.gameproj.entitites.PlayerInstance;
-import com.github.lasoloz.gameproj.graphics.TerrainSet;
 import com.github.lasoloz.gameproj.math.Vec2f;
 import com.github.lasoloz.gameproj.math.Vec2i;
+
+import javax.management.InstanceNotFoundException;
 
 public class GameController extends Subject {
     public GameController(GameState gameState) {
@@ -27,7 +29,10 @@ public class GameController extends Subject {
         gameState.updateTime();
         gameState.moveCameraTowardsPlayer();
 
-        updateUnits();
+        if (gameState.readyForStep()) {
+            updatePlayer();
+            updateEnemies();
+        }
 
         int scrollState = gameState.getInput().getScrollState();
         if (scrollState < 0) {
@@ -79,102 +84,76 @@ public class GameController extends Subject {
     }
 
 
-    private void updateUnits() {
-//        if (gameState.readyForStep()) {
-//            // Check direction:
-//            GameInput gameInput = gameState.getInput();
-//            Direction moveDirection = gameInput.getDirectionFromCoord(
-//                    gameState.getScreenSize()
-//            );
-//
-//            Gdx.graphics.setCursor(gameState.getCursorSet().getDirCursor(
-//                    moveDirection)
-//            );
-//
-//            // Check, if player did something (mouse click)
-//            if (gameInput.isLeftPressed()) {
-//
-//                Vec2i playerPos = gameState.getPlayerPos();
-//                if (UnitLogic.movePlayer(
-//                        gameState, playerPos, moveDirection
-//                )) {
-//                    gameState.step();
-//                    Gdx.graphics.setCursor(
-//                            gameState.getCursorSet().getMainCursor()
-//                    );
-//                }
-//            }
-//        }
+    private void updatePlayer() {
+        Vec2i playerPos = gameState.getPlayerPos();
+        Instance player = gameState.getMap().getInstance(
+                playerPos.x, playerPos.y
+        );
+        if (player.getHealth() <= 0) {
+//            gameState.defeat();
+        }
 
         // Alternative:
         boolean leftWasPressed = gameState.getInput().isLeftPressed();
-        if (gameState.readyForStep()) {
-            // Check move direction:
-            Vec2i targetPos = gameState.getRelativeMouseGridPos();
-            if (
-                    targetPos.x < 0 ||
-                            targetPos.y < 0 ||
-                            targetPos.x >= gameState.getMap().getWidth() ||
-                            targetPos.y >= gameState.getMap().getHeight()
-                    ) {
-                leftWasPressed = false; // Don't let player move
-            }
-            Vec2i playerPos = gameState.getPlayerPos();
-            int dx = targetPos.x - playerPos.x;
-            int dy = targetPos.y - playerPos.y;
+        // Check move direction:
+        Vec2i targetPos = gameState.getRelativeMouseGridPos();
+        int dx = targetPos.x - playerPos.x;
+        int dy = targetPos.y - playerPos.y;
 
-            // To far...
-            if (Math.abs(dx) > 1 || Math.abs(dy) > 1) {
+        // To far...
+        if (Math.abs(dx) > 1 || Math.abs(dy) > 1) {
+            Gdx.graphics.setCursor(
+                    gameState.getCursorSet().getMainCursor()
+            );
+            return;
+        }
+
+
+        // Close to the player, let's calculate direction:
+        Direction targetDir;
+        if (dx == 0) {
+            if (dy == -1) {
+                targetDir = Direction.DIR_NORTH;
+            } else if (dy == 1) {
+                targetDir = Direction.DIR_SOUTH;
+            } else {
+                targetDir = Direction.DIR_NODIR;
+            }
+        } else if (dx == -1) {
+            if (dy == -1) {
+                targetDir = Direction.DIR_NORTH_WEST;
+            } else if (dy == 1) {
+                targetDir = Direction.DIR_SOUTH_WEST;
+            } else {
+                targetDir = Direction.DIR_WEST;
+            }
+        } else {
+            if (dy == -1) {
+                targetDir = Direction.DIR_NORTH_EAST;
+            } else if (dy == 1) {
+                targetDir = Direction.DIR_SOUTH_EAST;
+            } else {
+                targetDir = Direction.DIR_EAST;
+            }
+        }
+
+        // Set the move cursor needed
+        Gdx.graphics.setCursor(
+                gameState.getCursorSet().getDirCursor(targetDir)
+        );
+
+        // Check if player did something (mouse click)
+        if (leftWasPressed) {
+            if (UnitLogic.interactWithNewPos(
+                    gameState,
+                    playerPos,
+                    targetPos
+            )) {
+                gameState.step();
                 Gdx.graphics.setCursor(
                         gameState.getCursorSet().getMainCursor()
                 );
-                return;
-            }
-
-            // Close to the player, let's calculate direction:
-            Direction moveDir;
-            if (dx == 0) {
-                if (dy == -1) {
-                    moveDir = Direction.DIR_NORTH;
-                } else if (dy == 1) {
-                    moveDir = Direction.DIR_SOUTH;
-                } else {
-                    moveDir = Direction.DIR_NODIR;
-                }
-            } else if (dx == -1) {
-                if (dy == -1) {
-                    moveDir = Direction.DIR_NORTH_WEST;
-                } else if (dy == 1) {
-                    moveDir = Direction.DIR_SOUTH_WEST;
-                } else {
-                    moveDir = Direction.DIR_WEST;
-                }
-            } else {
-                if (dy == -1) {
-                    moveDir = Direction.DIR_NORTH_EAST;
-                } else if (dy == 1) {
-                    moveDir = Direction.DIR_SOUTH_EAST;
-                } else {
-                    moveDir = Direction.DIR_EAST;
-                }
-            }
-
-            // Set the move cursor needed
-            Gdx.graphics.setCursor(
-                    gameState.getCursorSet().getDirCursor(moveDir)
-            );
-
-            // Check if player did something (mouse click)
-            if (leftWasPressed) {
-                if (UnitLogic.movePlayer(
-                        gameState, playerPos, moveDir
-                )) {
-                    gameState.step();
-                    Gdx.graphics.setCursor(
-                            gameState.getCursorSet().getMainCursor()
-                    );
-                    updatePlayerVisibility();
-                }
+                updatePlayerVisibility();
             }
         }
     }
@@ -212,6 +191,28 @@ public class GameController extends Subject {
             for (int x = 0; x < map.getWidth(); ++x) {
                 map.getGameMapTile(x, y).setSeen(false);
             }
+        }
+    }
+
+
+
+    private void updateEnemies() {
+        GameMap map = gameState.getMap();
+        for (int y = 0; y < map.getHeight(); ++y) {
+            for (int x = 0; x < map.getWidth(); ++x) {
+                Instance current = map.getInstance(x, y);
+                if (current != null &&
+                        current.getBlueprint().getType() == InstanceType.ENEMY
+                        ) {
+                    updateEnemy(current, x, y);
+                }
+            }
+        }
+    }
+
+    private void updateEnemy(Instance enemy, int x, int y) {
+        if (enemy.getHealth() <= 0) {
+            gameState.getMap().getGameMapTile(x, y).removeContent();
         }
     }
 
