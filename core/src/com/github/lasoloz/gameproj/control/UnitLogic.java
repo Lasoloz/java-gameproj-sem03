@@ -1,5 +1,6 @@
 package com.github.lasoloz.gameproj.control;
 
+import com.badlogic.gdx.Game;
 import com.github.lasoloz.gameproj.blueprints.Direction;
 import com.github.lasoloz.gameproj.blueprints.InstanceType;
 import com.github.lasoloz.gameproj.control.details.GameMap;
@@ -9,6 +10,44 @@ import com.github.lasoloz.gameproj.entitites.Instance;
 import com.github.lasoloz.gameproj.math.Vec2i;
 
 public class UnitLogic {
+    public static void enemyInteraction(
+            GameState gameState,
+            Vec2i pos,
+            Vec2i newPos
+    ) {
+        GameMap map = gameState.getMap();
+
+        if (!map.inMap(newPos)) {
+            gameState.addEnemyPosition(pos);
+            return;
+        }
+
+        if (map.getData(newPos) != 0) {
+            gameState.addEnemyPosition(pos);
+            return;
+        }
+
+        GameMapTile currentTile = map.getGameMapTile(pos);
+        GameMapTile otherTile = map.getGameMapTile(newPos);
+
+        Instance otherInstance = otherTile.getContent();
+        if (otherInstance == null) {
+            currentTile.moveContent(otherTile);
+            gameState.addEnemyPosition(newPos);
+            return;
+        }
+
+        gameState.addEnemyPosition(pos);
+
+        if (otherInstance.getBlueprint().getType() ==
+                InstanceType.PLAYER
+                ) {
+            otherInstance.damage(
+                    currentTile.getContent().getBlueprint().getRandomDamage()
+            );
+        }
+    }
+
     public static boolean interactWithNewPos(
             GameState gameState,
             Vec2i pos,
@@ -17,11 +56,13 @@ public class UnitLogic {
         GameMap map = gameState.getMap();
 
         if (!map.inMap(newPos)) {
+            gameState.addEnemyPosition(pos);
             return false;
         }
 
         // Check if new position has the correct terrain type:
         if (map.getData(newPos) != 0) {
+            gameState.addEnemyPosition(pos);
             return false;
         }
 
@@ -32,10 +73,11 @@ public class UnitLogic {
 
         if (otherInstance == null) {
             currentTile.moveContent(otherTile);
-            if (otherTile.getContent().getBlueprint().getType() ==
-                    InstanceType.PLAYER
-                    ) {
+            InstanceType type = otherTile.getContent().getBlueprint().getType();
+            if (type == InstanceType.PLAYER) {
                 gameState.getPlayerPos().set(newPos);
+            } else if (type == InstanceType.ENEMY) {
+                gameState.addEnemyPosition(newPos);
             }
             return true;
         }
@@ -50,7 +92,7 @@ public class UnitLogic {
                         newPos
                 );
             case ENEMY:
-                return enemyInteraction(currentTile, otherTile);
+                return enemyInteraction(gameState, currentTile, otherTile);
             default:
                 return false;
         }
@@ -82,6 +124,7 @@ public class UnitLogic {
     }
 
     private static boolean enemyInteraction(
+            GameState gameState,
             GameMapTile enemyTile,
             GameMapTile targetTile
     ) {
@@ -98,39 +141,17 @@ public class UnitLogic {
         }
     }
 
-    public static boolean movePlayer(
-            GameState gameState,
-            Vec2i playerPos,
-            Direction moveDirection
-    ) {
-        return moveUnit(gameState, playerPos, moveDirection);
-    }
 
-    public static boolean moveUnit(
+
+    public static void playerSpecialInteraction(
             GameState gameState,
-            Vec2i unitPos,
-            Direction moveDirection
+            Vec2i targetPos
     ) {
         GameMap map = gameState.getMap();
-        Vec2i newPos = unitPos.add(moveDirection.getMoveBaseVector());
+        Instance targetInstance = map.getInstance(targetPos.x, targetPos.y);
 
-        if (!map.inMap(newPos)) {
-            return false;
+        if (targetInstance != null) {
+            targetInstance.stun();
         }
-
-        // Check if new position has the correct terrain type:
-        if (map.getData(newPos) != 0) {
-            return false;
-        }
-
-        // Check if new position is occupied:
-        if (map.getGameMapTile(newPos).isOccupied()) {
-            return false;
-        }
-
-        // If everything is alright, then we can move our unit:
-        map.getGameMapTile(unitPos).moveContent(map.getGameMapTile(newPos));
-        unitPos.set(newPos);
-        return true;
     }
 }

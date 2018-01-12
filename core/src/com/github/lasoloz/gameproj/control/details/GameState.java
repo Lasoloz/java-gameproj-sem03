@@ -8,6 +8,8 @@ import com.github.lasoloz.gameproj.graphics.CursorSet;
 import com.github.lasoloz.gameproj.math.Vec2f;
 import com.github.lasoloz.gameproj.math.Vec2i;
 
+import java.util.ArrayList;
+
 public class GameState implements Disposable {
     public final static Vec2f gridSize = new Vec2f(28f, 16f);
     public final static long STEP_TIME_DELTA = 250;
@@ -20,6 +22,7 @@ public class GameState implements Disposable {
     private GameInput input;
 
     private Vec2i playerPos;
+    private ArrayList<Vec2i> currentEnemyPositions;
     private Vec2f cameraPos;
 
     private Vec2i screenSize;
@@ -147,6 +150,7 @@ public class GameState implements Disposable {
         if (map.loadMap(mapFileName)) {
             playerPos = map.getOriginalPlayerPos();
             cameraPos = getRealPlayerPos();
+            currentEnemyPositions = map.getOriginalEnemyPositions();
             return true;
         } else {
             return false;
@@ -192,5 +196,19 @@ public class GameState implements Disposable {
 
     public CursorSet getCursorSet() {
         return cursorSet;
+    }
+
+
+    public ArrayList<Vec2i> getCurrentEnemyPositions() {
+        return currentEnemyPositions;
+    }
+
+    public void resetEnemyPositions() {
+        currentEnemyPositions = new ArrayList<Vec2i>(
+                currentEnemyPositions.size()
+        );
+    }
+    public void addEnemyPosition(Vec2i enemyPos) {
+        this.currentEnemyPositions.add(enemyPos);
     }
 }

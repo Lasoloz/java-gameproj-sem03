@@ -2,7 +2,7 @@ package com.github.lasoloz.gameproj.control;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.github.lasoloz.gameproj.blueprints.Blueprint;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.github.lasoloz.gameproj.blueprints.Direction;
 import com.github.lasoloz.gameproj.blueprints.InstanceType;
 import com.github.lasoloz.gameproj.control.details.GameMap;
@@ -13,9 +13,13 @@ import com.github.lasoloz.gameproj.entitites.Instance;
 import com.github.lasoloz.gameproj.math.Vec2f;
 import com.github.lasoloz.gameproj.math.Vec2i;
 
-import javax.management.InstanceNotFoundException;
+import java.util.ArrayList;
+import java.util.Random;
 
 public class GameController extends Subject {
+    private Random rnd = new Random(TimeUtils.millis());
+
+
     public GameController(GameState gameState) {
         super(gameState);
         Gdx.input.setInputProcessor(gameState.getInput());
@@ -30,8 +34,9 @@ public class GameController extends Subject {
         gameState.moveCameraTowardsPlayer();
 
         if (gameState.readyForStep()) {
-            updatePlayer();
-            updateEnemies();
+            if (updatePlayer()) {
+                updateEnemies();
+            }
         }
 
         int scrollState = gameState.getInput().getScrollState();
@@ -84,7 +89,7 @@ public class GameController extends Subject {
     }
 
 
-    private void updatePlayer() {
+    private boolean updatePlayer() {
         Vec2i playerPos = gameState.getPlayerPos();
         Instance player = gameState.getMap().getInstance(
                 playerPos.x, playerPos.y
@@ -95,6 +100,7 @@ public class GameController extends Subject {
 
         // Alternative:
         boolean leftWasPressed = gameState.getInput().isLeftPressed();
+        boolean rightWasPressed = gameState.getInput().isRightPressed();
         // Check move direction:
         Vec2i targetPos = gameState.getRelativeMouseGridPos();
         int dx = targetPos.x - playerPos.x;
@@ -105,7 +111,7 @@ public class GameController extends Subject {
             Gdx.graphics.setCursor(
                     gameState.getCursorSet().getMainCursor()
             );
-            return;
+            return false;
         }
 
 
@@ -154,8 +160,18 @@ public class GameController extends Subject {
                         gameState.getCursorSet().getMainCursor()
                 );
                 updatePlayerVisibility();
+                return true;
             }
+        } else if (rightWasPressed) {
+            UnitLogic.playerSpecialInteraction(
+                    gameState,
+                    targetPos
+            );
+            gameState.step();
+            return true;
         }
+
+        return false;
     }
 
 
@@ -197,22 +213,68 @@ public class GameController extends Subject {
 
 
     private void updateEnemies() {
+        ArrayList<Vec2i> oldEnemyPositions = gameState.
+                getCurrentEnemyPositions();
+
+        gameState.resetEnemyPositions();
+
         GameMap map = gameState.getMap();
-        for (int y = 0; y < map.getHeight(); ++y) {
-            for (int x = 0; x < map.getWidth(); ++x) {
-                Instance current = map.getInstance(x, y);
-                if (current != null &&
-                        current.getBlueprint().getType() == InstanceType.ENEMY
-                        ) {
-                    updateEnemy(current, x, y);
-                }
+        for (Vec2i pos : oldEnemyPositions) {
+            Instance current = map.getInstance(pos.x, pos.y);
+            if (current != null &&
+                    current.getBlueprint().getType() == InstanceType.ENEMY
+                    ) {
+                updateEnemy(current, pos.x, pos.y);
             }
         }
     }
 
     private void updateEnemy(Instance enemy, int x, int y) {
+        Vec2i oldPos = new Vec2i(x, y);
         if (enemy.getHealth() <= 0) {
             gameState.getMap().getGameMapTile(x, y).removeContent();
+            return;
+        }
+
+        if (enemy.isStunned()) {
+            gameState.addEnemyPosition(oldPos);
+            return;
+        }
+
+        Vec2i playerPos = gameState.getPlayerPos();
+
+        int dx = playerPos.x - x;
+        int dy = playerPos.y - y;
+        int ndx = normalize(dx);
+        int ndy = normalize(dy);
+        if (Math.abs(dx) > Math.abs(dy)) {
+            ndy = 0;
+            if (rnd.nextInt(20) < 2) { // Sorry for the magic number :(
+                ndx = 0;
+            }
+        } else {
+            ndx = 0;
+            if (rnd.nextInt(20) < 2) { // Same
+                ndy = 0;
+            }
+        }
+
+        Vec2i targetPos = new Vec2i(x + ndx, y + ndy);
+
+//        System.out.println(
+//                "Action from: " + oldPos + " to " + targetPos +
+//                        "; dx" + dx + "; dy: " + dy);
+
+        UnitLogic.enemyInteraction(gameState, oldPos, targetPos);
+    }
+
+    private static int normalize(int delta) {
+        if (delta < 0) {
+            return -1;
+        } else if (delta > 0){
+            return 1;
+        } else {
+            return 0;
         }
     }
 

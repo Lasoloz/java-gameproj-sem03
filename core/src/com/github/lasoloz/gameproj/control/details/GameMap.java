@@ -13,11 +13,15 @@ import com.github.lasoloz.gameproj.graphics.TerrainCollection;
 import com.github.lasoloz.gameproj.math.Vec2i;
 import com.github.lasoloz.gameproj.util.ResourceLoader;
 
+import java.util.ArrayList;
+
 public class GameMap {
     private GameMapTile[][] map;
     private TerrainCollection terrainCollection;
     private BlueprintSet blueprintSet;
     private Vec2i originalPlayerPos;
+    // Stupid, but should work:
+    private ArrayList<Vec2i> originalEnemyPositions;
 
     /*public*/ GameMap() {
         map = null;
@@ -67,6 +71,7 @@ public class GameMap {
             Gdx.app.log("GameMap", "Blueprint data parsed!");
 
             // Parse units:
+            originalEnemyPositions = new ArrayList<Vec2i>();
             return parseUnits(root.get("units"));
         } catch (NullPointerException ex) {
             Gdx.app.error("GameMap", "Null element in map file!");
@@ -121,9 +126,13 @@ public class GameMap {
                 }
 
                 originalPlayerPos = new Vec2i(posX, posY);
+            } else if (currentBlueprint.getType() == InstanceType.ENEMY) {
+                // Register enemy:
             }
 
             map[posY][posX].addContent(createInstance(currentBlueprint));
+
+            originalEnemyPositions.add(new Vec2i(posX, posY));
 
             unitIter = unitIter.next;
         }
@@ -198,5 +207,10 @@ public class GameMap {
                 pos.y < 0 ||
                 pos.y >= map.length
         );
+    }
+
+
+    public ArrayList<Vec2i> getOriginalEnemyPositions() {
+        return originalEnemyPositions;
     }
 }

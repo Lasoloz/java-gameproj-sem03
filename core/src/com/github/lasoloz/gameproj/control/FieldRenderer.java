@@ -5,26 +5,22 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import com.github.lasoloz.gameproj.blueprints.Action;
 import com.github.lasoloz.gameproj.blueprints.Blueprint;
-import com.github.lasoloz.gameproj.blueprints.Direction;
 import com.github.lasoloz.gameproj.control.details.GameMap;
 import com.github.lasoloz.gameproj.control.details.GameMapTile;
 import com.github.lasoloz.gameproj.control.details.GameState;
 import com.github.lasoloz.gameproj.control.details.Observer;
 import com.github.lasoloz.gameproj.entitites.Instance;
 import com.github.lasoloz.gameproj.graphics.Drawable;
-import com.github.lasoloz.gameproj.graphics.SpriteWrapper;
 import com.github.lasoloz.gameproj.graphics.TerrainCollection;
 import com.github.lasoloz.gameproj.graphics.TerrainSet;
 import com.github.lasoloz.gameproj.math.Vec2f;
 import com.github.lasoloz.gameproj.math.Vec2i;
-import com.github.lasoloz.gameproj.util.ResourceLoader;
 
 public class FieldRenderer implements Observer, Disposable {
     private SpriteBatch spriteBatch; // For drawing terrain

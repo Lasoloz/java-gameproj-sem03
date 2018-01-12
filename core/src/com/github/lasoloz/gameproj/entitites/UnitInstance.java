@@ -1,24 +1,23 @@
 package com.github.lasoloz.gameproj.entitites;
 
-import com.github.lasoloz.gameproj.blueprints.Blueprint;
 import com.github.lasoloz.gameproj.blueprints.UnitBlueprint;
-
-import java.sql.Time;
-import java.util.Random;
 
 public class UnitInstance extends Instance {
     private int health;
+    private int stunned;
 
     public UnitInstance(UnitBlueprint unitBlueprint) {
         super(unitBlueprint);
         health = unitBlueprint.getMaxHealth();
+        stunned = 0;
     }
 
 
     @Override
     public String getInfo() {
         return blueprint.getInfo() + " - " + "HP: " + health + "/" +
-                blueprint.getMaxHealth();
+                blueprint.getMaxHealth() +
+                (stunned > 0 ? ", stunned" : "");
     }
 
     @Override
@@ -31,5 +30,20 @@ public class UnitInstance extends Instance {
         int protection = blueprint.getRandomProtection();
         int deltaDamage = Math.max(0, damage - protection);
         health -= deltaDamage;
+    }
+
+    @Override
+    public void stun() {
+        stunned = 3; // Sorry for the magic number :( I'll write a constant
+        // definition in the future
+    }
+
+    @Override
+    public boolean isStunned() {
+        if (stunned > 0) {
+            --stunned;
+            return true;
+        }
+        return false;
     }
 }

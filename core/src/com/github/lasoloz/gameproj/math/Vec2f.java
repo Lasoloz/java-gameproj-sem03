@@ -92,6 +92,6 @@ public class Vec2f {
 
     @Override
     public String toString() {
-        return "{x: " + x + ", " + y + "}";
+        return "{x: " + x + ", y:" + y + "}";
     }
 }

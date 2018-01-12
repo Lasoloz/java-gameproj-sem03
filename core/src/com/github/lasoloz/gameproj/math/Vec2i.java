@@ -65,6 +65,6 @@ public class Vec2i {
 
     @Override
     public String toString() {
-        return "(i){x: " + x + ", " + y + "}";
+        return "(i){x: " + x + ", y: " + y + "}";
     }
 }

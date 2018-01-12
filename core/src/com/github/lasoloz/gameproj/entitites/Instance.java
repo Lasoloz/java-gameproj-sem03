@@ -25,4 +25,10 @@ public class Instance {
     }
 
     public void damage(int damage) {}
+
+    public void stun() {}
+
+    public boolean isStunned() {
+        return  false;
+    }
 }
