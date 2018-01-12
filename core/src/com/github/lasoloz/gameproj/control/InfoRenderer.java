@@ -20,6 +20,7 @@ public class InfoRenderer implements Observer, Disposable {
     private BitmapFont font;
     private static final int FONT_SIZE = 22;
     private static final int BORDERS = 4;
+    private static final int HEALTH_BAR_THICKNESS = 10;
 
     public InfoRenderer() {
         // Sprite renderer:
@@ -41,19 +42,69 @@ public class InfoRenderer implements Observer, Disposable {
 
     @Override
     public void update(GameState gameState) {
+        printTileInformation(gameState);
+        printPlayerInformation(gameState);
+    }
+
+    private void printPlayerInformation(GameState gameState) {
+        // Get player position:
+        Vec2i pos = gameState.getPlayerPos();
+
+        // Get player instance:
+        Instance playerInstance = gameState.getMap().getInstance(pos.x, pos.y);
+
+        // Draw health bar:
+        drawHealthBar(
+                gameState,
+                playerInstance.getHealth(),
+                playerInstance.getBlueprint().getMaxHealth()
+        );
+        // Print player health and loot value:
+//        drawPlayerHealthAndLootValue
+    }
+
+    private void drawHealthBar(GameState gameState, int health, int maxHealth) {
+        // Get length of opaque rectangle:
+        int length = gameState.getScreenSize().x - BORDERS * 2;
+
+        // Draw base rect:
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setProjectionMatrix(gameState.getUiCamera().combined);
+        shapeRenderer.setColor(0f, 0f, 0f, .7f);
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+
+        int top = gameState.getScreenSize().y - BORDERS - HEALTH_BAR_THICKNESS;
+
+        shapeRenderer.rect(
+                BORDERS,
+                top,
+                length,
+                HEALTH_BAR_THICKNESS
+        );
+
+
+        int healthLen = (length - 2) * health / maxHealth;
+
+        shapeRenderer.setColor(.2f, 5f, .1f, 1f);
+        shapeRenderer.rect(
+                BORDERS + 1,
+                top + 1,
+                healthLen,
+                HEALTH_BAR_THICKNESS - 2
+        );
+
+        shapeRenderer.end();
+    }
+
+    private void printTileInformation(GameState gameState) {
         // Draw information on update:
-        // Get
+        // Get tile position:
         Vec2i pos = gameState.getRelativeMouseGridPos();
 
+        // Create new message:
         String message;
 
-        if (pos.x < 0 ||
-                pos.x >= gameState.getMap().getWidth() ||
-                pos.y < 0 ||
-                pos.y >= gameState.getMap().getHeight()
-                ) {
-            message = " - ";
-        } else {
+        if (gameState.getMap().inMap(pos)) {
             // Get unit information
             message = "(" + pos.x + ", " + pos.y + ")";
             GameMap map = gameState.getMap();
@@ -63,15 +114,11 @@ public class InfoRenderer implements Observer, Disposable {
             // Get instance information:
             Instance instance = map.getInstance(pos.x, pos.y);
             message += getInstanceInformation(instance);
+        } else {
+            message = " - ";
         }
 
-//        // Get information about game state:
-//        if (gameState.readyForStep()) {
-//            message += " - Please, perform action!";
-//        } else {
-//            message += " - Performing command...";
-//        }
-
+        // Get length of opaque rectangle:
         int length = gameState.getScreenSize().x - BORDERS * 2;
 
         // Drawing part;

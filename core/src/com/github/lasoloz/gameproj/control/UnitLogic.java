@@ -1,7 +1,5 @@
 package com.github.lasoloz.gameproj.control;
 
-import com.badlogic.gdx.Game;
-import com.github.lasoloz.gameproj.blueprints.Direction;
 import com.github.lasoloz.gameproj.blueprints.InstanceType;
 import com.github.lasoloz.gameproj.control.details.GameMap;
 import com.github.lasoloz.gameproj.control.details.GameMapTile;

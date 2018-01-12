@@ -176,27 +176,63 @@ public class GameController extends Subject {
 
 
     private void updatePlayerVisibility() {
-        Vec2i playerPos = gameState.getPlayerPos();
-        GameMap map = gameState.getMap();
-        Instance player = map.getInstance(playerPos.x, playerPos.y);
-        int range = player.getBlueprint().getRange();
-
-        // Reset the seen status for every cell:
         resetSeen();
 
-        // Get visibility boundaries:
-        int vLeft = Math.max(0, playerPos.x - range);
-        int vTop = Math.max(0, playerPos.y - range);
-        int vRight = Math.min(map.getWidth() - 1, playerPos.x + range);
-        int vBottom = Math.min(map.getHeight() - 1, playerPos.y + range);
+        Vec2i[][] rays = {{
+            new Vec2i(1, 0)
+        }, {
+            new Vec2i(0, 1)
+        }, {
+            new Vec2i(-1, 0)
+        }, {
+            new Vec2i(0, -1)
+        }, {
+            new Vec2i(0, 1), new Vec2i(1, 0)
+        }, {
+            new Vec2i(0, 1), new Vec2i(-1, 0)
+        }, {
+            new Vec2i(0, -1), new Vec2i(1, 0)
+        }, {
+            new Vec2i(0, -1), new Vec2i(-1, 0)
+        }, {
+            new Vec2i(1, 0), new Vec2i(0, 1)
+        }, {
+            new Vec2i(1, 0), new Vec2i(0, -1)
+        }, {
+            new Vec2i(-1, 0), new Vec2i(0, 1)
+        }, {
+            new Vec2i(-1, 0), new Vec2i(0, -1)
+        }};
 
-        // Simple, next time count walls!!!
-        for (int y = vTop; y <= vBottom; ++y) {
-            for (int x = vLeft; x <= vRight; ++x) {
-                GameMapTile tile = map.getGameMapTile(x, y);
-                tile.setKnown(true);
-                tile.setSeen(true);
+        for (Vec2i[] ray : rays) {
+            playerSegmentProjection(ray);
+        }
+    }
+
+    private void playerSegmentProjection(Vec2i[] moveList) {
+        Vec2i iter = gameState.getPlayerPos().copy();
+        int currentMove = 0;
+        int allMoves = moveList.length;
+
+        // I know... This is poor coding style, but I'm in a rush :(
+        GameMap map = gameState.getMap();
+        int range = map.getInstance(iter.x, iter.y).
+                getBlueprint().getRange();
+
+        for (int i = 0; i < range; ++i) {
+            if (!map.inMap(iter)) {
+                return;
             }
+
+            GameMapTile mapTile = map.getGameMapTile(iter);
+            mapTile.setSeen(true);
+            mapTile.setKnown(true);
+            if (mapTile.getTileCode() == 1) {
+                return;
+            }
+
+            iter.addTo(moveList[currentMove++]);
+            currentMove %= allMoves;
         }
     }
 
@@ -247,7 +283,16 @@ public class GameController extends Subject {
         int dy = playerPos.y - y;
         int ndx = normalize(dx);
         int ndy = normalize(dy);
-        if (Math.abs(dx) > Math.abs(dy)) {
+        int adx = Math.abs(dx);
+        int ady = Math.abs(dy);
+
+        int range = enemy.getBlueprint().getRange();
+        if (adx > range || ady > range) {
+            gameState.addEnemyPosition(oldPos);
+            return;
+        }
+
+        if (adx > ady) {
             ndy = 0;
             if (rnd.nextInt(20) < 2) { // Sorry for the magic number :(
                 ndx = 0;

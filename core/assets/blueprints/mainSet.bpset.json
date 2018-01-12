@@ -35,7 +35,7 @@
       "anim_speed": 1
     },
     "max_health": 30,
-    "range": 50,
+    "range": 5,
     "stats": {
       "melee_attack_mean": 5,
       "melee_attack_var": 1,
