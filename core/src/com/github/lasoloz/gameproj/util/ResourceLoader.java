@@ -3,6 +3,9 @@ package com.github.lasoloz.gameproj.util;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 
+/**
+ * Class used to load resources from local or internal path
+ */
 public class ResourceLoader {
     public static String internalPath = "";
     public static String localPath = "local/";

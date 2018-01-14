@@ -14,6 +14,18 @@ import com.github.lasoloz.gameproj.entitites.Instance;
 import com.github.lasoloz.gameproj.graphics.TerrainSet;
 import com.github.lasoloz.gameproj.math.Vec2i;
 
+/**
+ * Class extending `Observer` for rendering information about the units and/or
+ * player
+ * private members:
+ * textBatch - Batch used for text rendering
+ * shapeRenderer - Renderer used for rendering rectangles
+ * font - Font used by the renderer
+ * FONT_SIZE = font size for information
+ * BORDERS = Borders around the rectangle
+ * HEALTH_BAR_THICKNESS = Thickness of the health bar
+ * @see Observer
+ */
 public class InfoRenderer implements Observer, Disposable {
     private SpriteBatch textBatch;
     private ShapeRenderer shapeRenderer;
@@ -22,6 +34,9 @@ public class InfoRenderer implements Observer, Disposable {
     private static final int BORDERS = 4;
     private static final int HEALTH_BAR_THICKNESS = 10;
 
+    /**
+     * Constructor
+     */
     public InfoRenderer() {
         // Sprite renderer:
         textBatch = new SpriteBatch();
@@ -46,6 +61,11 @@ public class InfoRenderer implements Observer, Disposable {
         printPlayerInformation(gameState);
     }
 
+    /**
+     * Print information about player (health bar, others)
+     * @param gameState Game state object
+     * @see GameState
+     */
     private void printPlayerInformation(GameState gameState) {
         // Get player position:
         Vec2i pos = gameState.getPlayerPos();
@@ -63,6 +83,12 @@ public class InfoRenderer implements Observer, Disposable {
 //        drawPlayerHealthAndLootValue
     }
 
+    /**
+     * Draw health bar
+     * @param gameState Game state for retrieving information about player
+     * @param health Current player health
+     * @param maxHealth Player's max health
+     */
     private void drawHealthBar(GameState gameState, int health, int maxHealth) {
         // Get length of opaque rectangle:
         int length = gameState.getScreenSize().x - BORDERS * 2;
@@ -96,6 +122,11 @@ public class InfoRenderer implements Observer, Disposable {
         shapeRenderer.end();
     }
 
+    /**
+     * Print information about highlighted tile and about its content
+     * @param gameState Game state object
+     * @see GameState
+     */
     private void printTileInformation(GameState gameState) {
         // Draw information on update:
         // Get tile position:
@@ -137,6 +168,11 @@ public class InfoRenderer implements Observer, Disposable {
     }
 
 
+    /**
+     * Get terrain information
+     * @param data Terrain code of the tile
+     * @return String containing tile information
+     */
     private String getTerrainInformation(int data) {
         // Get terrain information:
         switch (data) {
@@ -151,6 +187,11 @@ public class InfoRenderer implements Observer, Disposable {
         return " Unknown;";
     }
 
+    /**
+     * Get information about instance
+     * @param instance Selected instance
+     * @return String information about instance
+     */
     private String getInstanceInformation(Instance instance) {
         // Get information about instance:
         // Check, if tile contains instance:

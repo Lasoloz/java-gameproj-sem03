@@ -2,6 +2,10 @@ package com.github.lasoloz.gameproj.blueprints;
 
 import com.github.lasoloz.gameproj.math.Vec2i;
 
+/**
+ * Enum defining eight directions and one "no direction" + constant for
+ * direction count
+ */
 public enum Direction {
     DIR_NODIR,
     DIR_NORTH,

@@ -6,6 +6,18 @@ import com.github.lasoloz.gameproj.blueprints.Direction;
 import com.github.lasoloz.gameproj.math.Vec2f;
 import com.github.lasoloz.gameproj.math.Vec2i;
 
+/**
+ * Class storing input differences
+ * private members:
+ * mouseX, mouseY - mouse coordinates
+ * lastScrollState - State of the last scroll event
+ * relPoint - Relative point from player's position towards mouse position in
+ *  real world
+ * inputVector - [deprecated]
+ * gridState - Grid state stored
+ * leftPressed - was left mouse button pressed down in last iterations?
+ * rightPressed - was right mouse button pressed down in last iterations?
+ */
 public class GameInput implements InputProcessor {
     private int mouseX = 0, mouseY = 0;
     private int lastScrollState = 0;
@@ -101,6 +113,14 @@ public class GameInput implements InputProcessor {
     }
 
 
+    /**
+     * Calculates the camera focus point based on the displayDiv, player's
+     * position and mouse's relative position in the world
+     * @param playerPos Player's position in the world
+     * @param screenSize Screen size
+     * @param displayDiv Current display div
+     * @return The point of focus of the camera in the world
+     */
     public Vec2f getCameraFocus(
             Vec2f playerPos,
             Vec2i screenSize,
@@ -111,6 +131,7 @@ public class GameInput implements InputProcessor {
         float deltaX = (mouseX - (float) screenSize.x / 2) / displayDiv;
         float deltaY = ((float) screenSize.y / 2 - mouseY) / displayDiv;
         if (displayDiv > 2) {
+            // Dynamic camera
             float oPosX = pPosX + deltaX;
             float oPosY = pPosY + deltaY;
 
@@ -123,6 +144,7 @@ public class GameInput implements InputProcessor {
                     (pPosY + oPosY) / 2f
             );
         } else {
+            // Static camera
             relPoint.setX(pPosX + deltaX);
             relPoint.setY(pPosY + deltaY);
             return new Vec2f(
@@ -132,41 +154,76 @@ public class GameInput implements InputProcessor {
         }
     }
 
+    /**
+     * Get mouse coordinates relative to player's position
+     * @return Mouse coordinates
+     */
     public Vec2f getRelativeMouseCoord() {
         return relPoint;
     }
 
+    /**
+     * Get scrool state
+     * @return Scroll state
+     */
     public int getScrollState() {
         int state = scrollState - lastScrollState;
         lastScrollState = scrollState;
         return state;
     }
 
+    /**
+     * Get movement vector based on keyboard input
+     * @return Movement vector
+     */
     public Vec2f getInputVector() {
         return inputVector;
     }
 
+    /**
+     * Get grid state (based on `G` key)
+     * @return Grid state
+     */
     public boolean getGridState() {
         return gridState;
     }
 
 
+    /**
+     * Check if left mouse button was pressed in the last iterations and set it
+     * to false
+     * @return State of left mouse button press-down
+     */
     public boolean isLeftPressed() {
         boolean leftPressed = this.leftPressed;
         this.leftPressed = false;
         return leftPressed;
     }
 
+    /**
+     * Check if right mouse button was pressed down in the last iterations and
+     * set it to false
+     * @return State of the right mouse button
+     */
     public boolean isRightPressed() {
         boolean rightPressed = this.rightPressed;
         this.rightPressed = false;
         return rightPressed;
     }
 
+    /**
+     * Get mouse coordinates in screen world
+     * @return Mouse screen coordinates
+     */
     public Vec2i getMouseCoord() {
         return new Vec2i(mouseX, mouseY);
     }
 
+    /**
+     * [ DEPRECATED ]
+     * @param screenSize [DEPRECATED]
+     * @return [DEPRECATED]
+     */
     public Direction getDirectionFromCoord(Vec2i screenSize) {
         int xm = mouseX - screenSize.x / 2;
         int ym = mouseY - screenSize.y / 2;

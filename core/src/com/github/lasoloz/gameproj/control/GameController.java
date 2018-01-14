@@ -16,10 +16,20 @@ import com.github.lasoloz.gameproj.math.Vec2i;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * Game controller class extending `Subject`
+ * Private members:
+ * rnd - Random number generator
+ * @see Subject
+ */
 public class GameController extends Subject {
     private Random rnd = new Random(TimeUtils.millis());
 
 
+    /**
+     * Construct a new controller with the specified game state object
+     * @param gameState Current game state object
+     */
     public GameController(GameState gameState) {
         super(gameState);
         Gdx.input.setInputProcessor(gameState.getInput());
@@ -50,6 +60,11 @@ public class GameController extends Subject {
     }
 
 
+    /**
+     * Handle resize event
+     * @param width New screen width
+     * @param height New screen height
+     */
     public void resize(int width, int height) {
         int displayDiv = gameState.getDisplayDiv();
         OrthographicCamera camera = gameState.getCamera();
@@ -66,7 +81,9 @@ public class GameController extends Subject {
     }
 
 
-
+    /**
+     * Update the cameras of the gameState
+     */
     private void updateCamera() {
         // Get field renderer camera, and update based on player position:
         GameInput input = gameState.getInput();
@@ -89,6 +106,10 @@ public class GameController extends Subject {
     }
 
 
+    /**
+     * Update player by checking some of the input events.
+     * @return Boolean state specifying if update happened
+     */
     private boolean updatePlayer() {
         Vec2i playerPos = gameState.getPlayerPos();
         Instance player = gameState.getMap().getInstance(
@@ -150,7 +171,7 @@ public class GameController extends Subject {
 
         // Check if player did something (mouse click)
         if (leftWasPressed) {
-            if (UnitLogic.interactWithNewPos(
+            if (UnitLogic.playerInteraction(
                     gameState,
                     playerPos,
                     targetPos
@@ -163,45 +184,89 @@ public class GameController extends Subject {
                 return true;
             }
         } else if (rightWasPressed) {
-            UnitLogic.playerSpecialInteraction(
+            if (UnitLogic.playerSpecialInteraction(
                     gameState,
                     targetPos
-            );
-            gameState.step();
-            return true;
+            )) {
+                gameState.step();
+                return true;
+            }
         }
 
         return false;
     }
 
 
+    /**
+     * Update seen and known tiles by players
+     */
     private void updatePlayerVisibility() {
         resetSeen();
 
         Vec2i[][] rays = {{
-            new Vec2i(1, 0)
+            new Vec2i(+1, 0)
         }, {
-            new Vec2i(0, 1)
+            new Vec2i(0, +1)
         }, {
             new Vec2i(-1, 0)
         }, {
             new Vec2i(0, -1)
         }, {
-            new Vec2i(0, 1), new Vec2i(1, 0)
+            new Vec2i(0, +1), new Vec2i(+1, 0)
         }, {
-            new Vec2i(0, 1), new Vec2i(-1, 0)
+            new Vec2i(0, +1), new Vec2i(-1, 0)
         }, {
-            new Vec2i(0, -1), new Vec2i(1, 0)
+            new Vec2i(0, -1), new Vec2i(+1, 0)
         }, {
             new Vec2i(0, -1), new Vec2i(-1, 0)
         }, {
-            new Vec2i(1, 0), new Vec2i(0, 1)
+            new Vec2i(+1, 0), new Vec2i(0, +1)
         }, {
-            new Vec2i(1, 0), new Vec2i(0, -1)
+            new Vec2i(+1, 0), new Vec2i(0, -1)
         }, {
-            new Vec2i(-1, 0), new Vec2i(0, 1)
+            new Vec2i(-1, 0), new Vec2i(0, +1)
         }, {
             new Vec2i(-1, 0), new Vec2i(0, -1)
+        }, {
+                new Vec2i(0, -1),
+                new Vec2i(0, -1),
+                new Vec2i(-1, 0),
+                new Vec2i(0, -1)
+        }, {
+                new Vec2i(0, -1),
+                new Vec2i(0, -1),
+                new Vec2i(+1, 0),
+                new Vec2i(0, -1)
+        }, {
+                new Vec2i(0, +1),
+                new Vec2i(0, +1),
+                new Vec2i(-1, 0),
+                new Vec2i(0, +1)
+        }, {
+                new Vec2i(0, +1),
+                new Vec2i(0, +1),
+                new Vec2i(+1, 0),
+                new Vec2i(0, +1)
+        }, {
+                new Vec2i(-1, 0),
+                new Vec2i(-1, 0),
+                new Vec2i(0, -1),
+                new Vec2i(-1, 0)
+        }, {
+                new Vec2i(-1, 0),
+                new Vec2i(-1, 0),
+                new Vec2i(0, +1),
+                new Vec2i(-1, 0)
+        }, {
+                new Vec2i(+1, 0),
+                new Vec2i(+1, 0),
+                new Vec2i(0, -1),
+                new Vec2i(+1, 0)
+        }, {
+                new Vec2i(+1, 0),
+                new Vec2i(+1, 0),
+                new Vec2i(0, +1),
+                new Vec2i(+1, 0)
         }};
 
         for (Vec2i[] ray : rays) {
@@ -209,6 +274,10 @@ public class GameController extends Subject {
         }
     }
 
+    /**
+     * Project "rays" for updating visibility in a direction
+     * @param moveList Ray movement's normalized vectors
+     */
     private void playerSegmentProjection(Vec2i[] moveList) {
         Vec2i iter = gameState.getPlayerPos().copy();
         int currentMove = 0;
@@ -236,6 +305,9 @@ public class GameController extends Subject {
         }
     }
 
+    /**
+     * Reset seen status of all tiles
+     */
     private void resetSeen() {
         // Reset seen status to false:
         GameMap map = gameState.getMap();
@@ -247,7 +319,9 @@ public class GameController extends Subject {
     }
 
 
-
+    /**
+     * Update enemies by using enemy position.
+     */
     private void updateEnemies() {
         ArrayList<Vec2i> oldEnemyPositions = gameState.
                 getCurrentEnemyPositions();
@@ -265,6 +339,12 @@ public class GameController extends Subject {
         }
     }
 
+    /**
+     * Update one specific enemy
+     * @param enemy Enemy instance
+     * @param x x coordinate of enemy's position
+     * @param y y coordinate of enemy's position
+     */
     private void updateEnemy(Instance enemy, int x, int y) {
         Vec2i oldPos = new Vec2i(x, y);
         if (enemy.getHealth() <= 0) {
@@ -313,10 +393,15 @@ public class GameController extends Subject {
         UnitLogic.enemyInteraction(gameState, oldPos, targetPos);
     }
 
-    private static int normalize(int delta) {
-        if (delta < 0) {
+    /**
+     * Normalize an integer number
+     * @param number Number to be normalized
+     * @return Normalized number
+     */
+    private static int normalize(int number) {
+        if (number < 0) {
             return -1;
-        } else if (delta > 0){
+        } else if (number > 0){
             return 1;
         } else {
             return 0;

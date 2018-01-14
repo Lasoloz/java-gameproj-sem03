@@ -7,7 +7,17 @@ import com.github.lasoloz.gameproj.control.details.GameState;
 import com.github.lasoloz.gameproj.entitites.Instance;
 import com.github.lasoloz.gameproj.math.Vec2i;
 
+/**
+ * Class with static methods implementing some of the unit logic
+ */
 public class UnitLogic {
+    /**
+     * Function used to interact enemy with its surroundings
+     * @param gameState Current game state object
+     * @param pos Current position which has the enemy
+     * @param newPos Selected position (where we want to move or attack)
+     * @see GameState
+     */
     public static void enemyInteraction(
             GameState gameState,
             Vec2i pos,
@@ -46,7 +56,15 @@ public class UnitLogic {
         }
     }
 
-    public static boolean interactWithNewPos(
+
+    /**
+     * Player interaction on left click
+     * @param gameState Current game state
+     * @param pos Old position
+     * @param newPos New position
+     * @return true if stepped, false otherwise
+     */
+    public static boolean playerInteraction(
             GameState gameState,
             Vec2i pos,
             Vec2i newPos
@@ -54,84 +72,35 @@ public class UnitLogic {
         GameMap map = gameState.getMap();
 
         if (!map.inMap(newPos)) {
-            gameState.addEnemyPosition(pos);
             return false;
         }
 
-        // Check if new position has the correct terrain type:
         if (map.getData(newPos) != 0) {
-            gameState.addEnemyPosition(pos);
             return false;
         }
 
-        // Get instances:
         GameMapTile currentTile = map.getGameMapTile(pos);
         GameMapTile otherTile = map.getGameMapTile(newPos);
         Instance otherInstance = otherTile.getContent();
 
         if (otherInstance == null) {
             currentTile.moveContent(otherTile);
-            InstanceType type = otherTile.getContent().getBlueprint().getType();
-            if (type == InstanceType.PLAYER) {
-                gameState.getPlayerPos().set(newPos);
-            } else if (type == InstanceType.ENEMY) {
-                gameState.addEnemyPosition(newPos);
-            }
+            gameState.getPlayerPos().set(newPos);
             return true;
         }
 
-        // Check, current instance:
-        switch (currentTile.getContent().getBlueprint().getType()) {
-            case PLAYER:
-                return playerInteraction(
-                        currentTile,
-                        otherTile,
-                        gameState.getPlayerPos(),
-                        newPos
-                );
-            case ENEMY:
-                return enemyInteraction(gameState, currentTile, otherTile);
-            default:
-                return false;
-        }
-    }
-
-    private static boolean playerInteraction(
-            GameMapTile playerTile,
-            GameMapTile targetTile,
-            Vec2i playerPos,
-            Vec2i targetPos
-    ) {
-        Instance targetInstance = targetTile.getContent();
-        switch (targetInstance.getBlueprint().getType()) {
+        switch (otherInstance.getBlueprint().getType()) {
             case LOOT:
                 // Add loot value to score
-                targetTile.removeContent();
-                playerTile.moveContent(targetTile);
-                playerPos.set(targetPos);
+                otherTile.removeContent();
+                currentTile.moveContent(otherTile);
+                gameState.getPlayerPos().set(newPos);
                 return true;
             case ENEMY:
                 // Damage enemy instance
-                targetInstance.damage(
-                        playerTile.getContent().getBlueprint().getRandomDamage()
-                );
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    private static boolean enemyInteraction(
-            GameState gameState,
-            GameMapTile enemyTile,
-            GameMapTile targetTile
-    ) {
-        Instance targetInstance = targetTile.getContent();
-        switch (targetInstance.getBlueprint().getType()) {
-            case PLAYER:
-                // Damage player:
-                targetInstance.damage(
-                        enemyTile.getContent().getBlueprint().getRandomDamage()
+                otherInstance.damage(
+                        currentTile.getContent().
+                                getBlueprint().getRandomDamage()
                 );
                 return true;
             default:
@@ -140,16 +109,26 @@ public class UnitLogic {
     }
 
 
-
-    public static void playerSpecialInteraction(
+    /**
+     * Function called in case of special interaction
+     * @param gameState Current game state object
+     * @param targetPos Target position
+     * @return true if stunned, false otherwise
+     */
+    public static boolean playerSpecialInteraction(
             GameState gameState,
             Vec2i targetPos
     ) {
         GameMap map = gameState.getMap();
+        if (!map.inMap(targetPos)) {
+            return false;
+        }
+
         Instance targetInstance = map.getInstance(targetPos.x, targetPos.y);
 
         if (targetInstance != null) {
             targetInstance.stun();
         }
+        return true;
     }
 }

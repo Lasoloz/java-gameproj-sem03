@@ -2,10 +2,18 @@ package com.github.lasoloz.gameproj.entitites;
 
 import com.github.lasoloz.gameproj.blueprints.UnitBlueprint;
 
+/**
+ * Unit instance extending Instance base class having additional members for
+ * additional stats
+ */
 public class UnitInstance extends Instance {
     private int health;
     private int stunned;
 
+    /**
+     * Construct new instance from unit blueprint
+     * @param unitBlueprint Unit blueprint of unit instance
+     */
     public UnitInstance(UnitBlueprint unitBlueprint) {
         super(unitBlueprint);
         health = unitBlueprint.getMaxHealth();

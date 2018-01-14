@@ -12,10 +12,21 @@ import com.github.lasoloz.gameproj.util.ResourceLoader;
 
 import java.util.ArrayList;
 
+/**
+ * Class used for storing unit blueprints for a map. It supports loading them
+ * from `json` files.
+ * private members: blueprints - list of blueprints stored.
+ * pack - Texture atlas used for the specific blueprint set
+ */
 public class BlueprintSet {
     private ArrayList<Blueprint> blueprints;
     private TextureAtlas pack;
 
+    /**
+     * Constructor for blueprint set
+     * @param blueprintSetPath Path towards blueprint definition (`.bpset.json`)
+     * @throws BlueprintException Exception thrown in case of failure
+     */
     public BlueprintSet(String blueprintSetPath) throws BlueprintException {
         FileHandle blueprintSetFile =
                 ResourceLoader.loadInternalOrLocalResource(blueprintSetPath);
@@ -27,12 +38,22 @@ public class BlueprintSet {
             );
         }
 
+        // Get root from json
         JsonValue root = new JsonReader().parse(blueprintSetFile);
 
+        // Create blueprint list
         blueprints = new ArrayList<Blueprint>();
+        // Read information from root
         readRoot(root);
     }
 
+    /**
+     * Get a blueprint from the list (used in maps)
+     * @param blueprintIndex Index of requested blueprint
+     * @return Selected blueprint from the array list
+     * @throws IndexOutOfBoundsException Exception thrown in case of invalid
+     * blueprint selection
+     */
     public Blueprint getBlueprint(
             int blueprintIndex
     ) throws IndexOutOfBoundsException {
@@ -40,7 +61,11 @@ public class BlueprintSet {
     }
 
 
-
+    /**
+     * Read information starting from root.
+     * @param root Root `json` object
+     * @throws BlueprintException Exception thrown in case of failure
+     */
     private void readRoot(JsonValue root) throws BlueprintException {
         try {
             String packName = root.getString("pack");
@@ -50,6 +75,8 @@ public class BlueprintSet {
 
             readBlueprints(root.get("blueprints"));
         } catch (NullPointerException ex) {
+            // Catch `NullPointerException`s and pack them in
+            // `BlueprintException`s
             throw new BlueprintException(
                     "BlueprintSet",
                     "BlueprintSet JSON file has invalid field(s)!"
@@ -57,6 +84,10 @@ public class BlueprintSet {
         }
     }
 
+    /**
+     * Read blueprints from blueprint list of `root`
+     * @param blueprints List of blueprints inside `root`
+     */
     private void readBlueprints(JsonValue blueprints) {
         JsonValue bpIter = blueprints.child;
 
@@ -79,6 +110,11 @@ public class BlueprintSet {
         }
     }
 
+    /**
+     * Create miscellaneous units' definitions (e.g. torch)
+     * @param blueprint Blueprint item in blueprint list of `root`
+     * @return New blueprint defining a miscellaneous unit
+     */
     private Blueprint createMisc(JsonValue blueprint) {
         // Get idle information:
         SpriteWrapper indexSprite = extractIndex(blueprint);
@@ -91,6 +127,11 @@ public class BlueprintSet {
         return misc;
     }
 
+    /**
+     * Create loot definition
+     * @param blueprint Blueprint item in blueprint list of `root`
+     * @return New blueprint defining a loot unit
+     */
     private Blueprint createLoot(JsonValue blueprint) {
         // Get index and idle information:
         SpriteWrapper indexSprite = extractIndex(blueprint);
@@ -107,6 +148,11 @@ public class BlueprintSet {
         return loot;
     }
 
+    /**
+     * Create a new unit (player or enemy)
+     * @param blueprint Blueprint item in blueprint list of `root`
+     * @return New blueprint defining a player or enemy
+     */
     private Blueprint createUnit(JsonValue blueprint) {
         // Get index and idle information:
         SpriteWrapper indexSprite = extractIndex(blueprint);
@@ -127,6 +173,14 @@ public class BlueprintSet {
     }
 
 
+    /**
+     * Create a player or unit base blueprint before parsing additional info
+     * @param blueprint Blueprint item in blueprint list of `root`
+     * @param indexSprite Index sprite
+     * @param idleAnimation Idle image/animation of unit
+     * @return New UnitBlueprint without any data regarding unit specific info
+     * (e.g. max health points)
+     */
     private UnitBlueprint createUnitBlueprint(
             JsonValue blueprint,
             SpriteWrapper indexSprite,
@@ -141,15 +195,26 @@ public class BlueprintSet {
     }
 
 
-    // Index extraction:
+    /**
+     * Extract index image from a blueprint definition
+     * @param blueprint Blueprint item in blueprint list of `root`
+     * @return Index image SpriteWrapper
+     * @see SpriteWrapper
+     */
     private SpriteWrapper extractIndex(JsonValue blueprint) {
         String indexRegion = blueprint.getString("index");
         return new SpriteWrapper(pack.findRegion(indexRegion));
     }
 
 
-
-    // Action extractor functions:
+    /**
+     * Extract idle animation or image
+     * @param blueprint Blueprint item in blueprint list of `root`
+     * @return Drawable object defining a SpriteWrapper or AnimationWrapper
+     * @see AnimationWrapper
+     * @see SpriteWrapper
+     * @see Drawable
+     */
     private Drawable extractIdle(JsonValue blueprint) {
         JsonValue idleData = blueprint.get("idle");
 
@@ -172,7 +237,11 @@ public class BlueprintSet {
     }
 
 
-    // Helper method for extracting unit animations and information:
+    /**
+     * Add unit specific information to the blueprint
+     * @param unitBlueprint Base unit blueprint before adding unit information
+     * @param blueprint Blueprint item in blueprint list of `root` json object
+     */
     private void addUnitInformation(
             UnitBlueprint unitBlueprint, JsonValue blueprint
     ) {

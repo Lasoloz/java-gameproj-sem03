@@ -8,11 +8,21 @@ import com.github.lasoloz.gameproj.util.ResourceLoader;
 import java.io.BufferedReader;
 import java.util.ArrayList;
 
+/**
+ * Class collecting multiple terrain sets. This way rendered terrains will have
+ * little differences
+ * @see TerrainSet
+ */
 public class TerrainCollection implements Disposable {
     private ArrayList<TerrainSet> terrainSets = new ArrayList<TerrainSet>();
     private TextureAtlas atlas;
 
 
+    /**
+     * Constructor
+     * @param terrainFilePath Terrain file defining terrain set
+     * @throws GraphicsException Graphics exception thrown in case of failure
+     */
     public TerrainCollection(String terrainFilePath) throws GraphicsException {
         FileHandle terrainFile =
                 ResourceLoader.loadInternalOrLocalResource(terrainFilePath);
@@ -35,6 +45,11 @@ public class TerrainCollection implements Disposable {
         }
     }
 
+    /**
+     * Method used to process terrain files
+     * @param br Opened buffered reader
+     * @throws GraphicsException Exception thrown in case of failure
+     */
     private void processTerrainDefinition(
             BufferedReader br
     ) throws GraphicsException {
@@ -68,6 +83,7 @@ public class TerrainCollection implements Disposable {
     }
 
 
+    // Get set using a modifier index
     public TerrainSet getSet(int modifier) {
         return terrainSets.get(modifier % terrainSets.size());
     }

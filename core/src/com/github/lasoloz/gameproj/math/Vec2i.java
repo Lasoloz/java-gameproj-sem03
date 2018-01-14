@@ -1,5 +1,8 @@
 package com.github.lasoloz.gameproj.math;
 
+/**
+ * Integer vector
+ */
 public class Vec2i {
     public int x;
     public int y;

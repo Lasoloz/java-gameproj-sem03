@@ -22,12 +22,22 @@ import com.github.lasoloz.gameproj.graphics.TerrainSet;
 import com.github.lasoloz.gameproj.math.Vec2f;
 import com.github.lasoloz.gameproj.math.Vec2i;
 
+/**
+ * Class responsible for rendering the contents of the game map
+ * Private members:
+ * spriteBatch - terrain and unit rendering batch
+ * shapeRenderer - shape rendering batch
+ * notSeenMask - mask for known tiles not being seen
+ */
 public class FieldRenderer implements Observer, Disposable {
     private SpriteBatch spriteBatch; // For drawing terrain
     private ShapeRenderer shapeRenderer; // For drawing grid:
 
     private Texture notSeenMask;
 
+    /**
+     * Construct a new field renderer
+     */
     public FieldRenderer() {
         spriteBatch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
@@ -52,6 +62,11 @@ public class FieldRenderer implements Observer, Disposable {
     }
 
 
+    /**
+     * Renders the game map, showing the the contents of every tile (instance
+     * over terrain tile)
+     * @param gameState Game state provided by controller
+     */
     private void renderMap(GameState gameState) {
         // Get map data:
         GameMap map = gameState.getMap();
@@ -154,6 +169,10 @@ public class FieldRenderer implements Observer, Disposable {
     }
 
 
+    /**
+     * Draw map grid
+     * @param gameState Game state provided by controller.
+     */
     private void drawGrid(GameState gameState) {
         // Get camera and screen dimensions:
         OrthographicCamera camera = gameState.getCamera();
@@ -215,6 +234,10 @@ public class FieldRenderer implements Observer, Disposable {
         shapeRenderer.end();
     }
 
+    /**
+     * Draws a filled rectangle over the selected tile in the map.
+     * @param gameState GameState provided by controller
+     */
     private void drawSelected(GameState gameState) {
         // Get selected position (mouse hover) from game input:
         Vec2f selectedPos = gameState.getInput().getRelativeMouseCoord();
@@ -246,6 +269,12 @@ public class FieldRenderer implements Observer, Disposable {
         shapeRenderer.end();
     }
 
+    /**
+     * Returns the bottom-left point of a tile in real world vector dimensions,
+     * if the specified point is in the tile
+     * @param point Point to be checked
+     * @return Vector specifying bottom-left point of the tile
+     */
     private Vector2 getClosestGridPoint(Vec2f point) {
         // Floor to grid point:
         final float gridX = GameState.gridSize.getX();

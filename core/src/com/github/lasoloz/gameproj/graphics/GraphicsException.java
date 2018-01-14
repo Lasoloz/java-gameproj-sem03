@@ -1,5 +1,8 @@
 package com.github.lasoloz.gameproj.graphics;
 
+/**
+ * Class used for handling graphical exceptions
+ */
 public class GraphicsException extends Exception {
     private String origin;
 

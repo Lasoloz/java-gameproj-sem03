@@ -35,7 +35,7 @@
       "anim_speed": 1
     },
     "max_health": 30,
-    "range": 5,
+    "range": 6,
     "stats": {
       "melee_attack_mean": 5,
       "melee_attack_var": 1,
@@ -56,7 +56,7 @@
       "anim_speed": 1
     },
     "max_health": 15,
-    "range": 3,
+    "range": 4,
     "stats": {
       "melee_attack_mean": 12,
       "melee_attack_var": 3,
@@ -74,7 +74,7 @@
       "region": "enemies/gnome/gnome_idle",
       "origin_x": 11,
       "origin_y": 4,
-      "anim_speed": 1
+      "anim_speed": 0.5
     },
     "max_health": 4,
     "range": 4,

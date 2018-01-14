@@ -3,10 +3,14 @@ package com.github.lasoloz.gameproj.blueprints;
 import com.github.lasoloz.gameproj.graphics.Drawable;
 import com.github.lasoloz.gameproj.graphics.SpriteWrapper;
 
+/**
+ * Loot blueprint extending blueprint, defining lootable items.
+ * private members: value - value of the loot object
+ */
 public class LootBlueprint extends Blueprint {
     private int value;
 
-    public LootBlueprint(SpriteWrapper indexImage, Drawable idleAction) {
+    LootBlueprint(SpriteWrapper indexImage, Drawable idleAction) {
         super(indexImage, idleAction);
     }
 
@@ -25,6 +29,10 @@ public class LootBlueprint extends Blueprint {
         return value;
     }
 
+    /**
+     * Set value of the loot
+     * @param value Numeric data representing value of the loot
+     */
     public void setValue(int value) {
         this.value = value;
     }

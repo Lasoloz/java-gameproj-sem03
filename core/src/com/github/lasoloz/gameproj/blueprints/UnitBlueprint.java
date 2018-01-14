@@ -3,8 +3,22 @@ package com.github.lasoloz.gameproj.blueprints;
 import com.github.lasoloz.gameproj.graphics.Drawable;
 import com.github.lasoloz.gameproj.graphics.SpriteWrapper;
 
+
+/**
+ * Blueprint defining movable units (which interact with enemies or player).
+ * Extends `Blueprint`
+ * Private members:
+ * meleeAttackMean - Mean melee attack damage
+ * meleeAttackVar - Variance in melee attack damage
+ * rangedAttackMean - Mean ranged attack damage
+ * rangedAttackVar - Variance in ranged attack damage
+ * protectionMean - Mean protection value
+ * protectionVar - Variance in protection value
+ * maxHealth - Max health points for unit
+ * range - Range of vision for the selected unit
+ * @see Blueprint
+ */
 public abstract class UnitBlueprint extends Blueprint {
-    private int stepsNeeded;
     private int meleeAttackMean;
     private int meleeAttackVar;
     private int rangedAttackMean;
@@ -15,17 +29,13 @@ public abstract class UnitBlueprint extends Blueprint {
     private int range;
 
 
+    /**
+     * Constructor calling superclass constructor
+     * @param indexImage Index sprite for unit
+     * @param idleAction Idle sprite/animation for new unit
+     */
     UnitBlueprint(SpriteWrapper indexImage, Drawable idleAction) {
         super(indexImage, idleAction);
-    }
-
-    @Override
-    public int getStepsNeeded() {
-        return stepsNeeded;
-    }
-
-    public void setStepsNeeded(int stepsNeeded) {
-        this.stepsNeeded = stepsNeeded;
     }
 
 
@@ -34,6 +44,10 @@ public abstract class UnitBlueprint extends Blueprint {
         return meleeAttackMean;
     }
 
+    /**
+     * Set value for melee attack mean damage
+     * @param meleeAttackMean New melee attack mean
+     */
     public void setMeleeAttackMean(int meleeAttackMean) {
         this.meleeAttackMean = meleeAttackMean;
     }
@@ -43,6 +57,10 @@ public abstract class UnitBlueprint extends Blueprint {
         return meleeAttackVar;
     }
 
+    /**
+     * Set value for melee attack damage variance
+     * @param meleeAttackVar New melee attack variance
+     */
     public void setMeleeAttackVar(int meleeAttackVar) {
         this.meleeAttackVar = meleeAttackVar;
     }
@@ -52,6 +70,10 @@ public abstract class UnitBlueprint extends Blueprint {
         return rangedAttackMean;
     }
 
+    /**
+     * Set ranged attack damage mean
+     * @param rangedAttackMean New ranged attack mean
+     */
     public void setRangedAttackMean(int rangedAttackMean) {
         this.rangedAttackMean = rangedAttackMean;
     }
@@ -61,6 +83,10 @@ public abstract class UnitBlueprint extends Blueprint {
         return rangedAttackVar;
     }
 
+    /**
+     * Set ranged attack damage variance
+     * @param rangedAttackVar New ranged attack variance
+     */
     public void setRangedAttackVar(int rangedAttackVar) {
         this.rangedAttackVar = rangedAttackVar;
     }
@@ -70,6 +96,10 @@ public abstract class UnitBlueprint extends Blueprint {
         return protectionMean;
     }
 
+    /**
+     * Set protection mean value
+     * @param protectionMean New mean value for protection
+     */
     public void setProtectionMean(int protectionMean) {
         this.protectionMean = protectionMean;
     }
@@ -79,6 +109,10 @@ public abstract class UnitBlueprint extends Blueprint {
         return protectionVar;
     }
 
+    /**
+     * Set variance for protection
+     * @param protectionVar New variance for protection
+     */
     public void setProtectionVar(int protectionVar) {
         this.protectionVar = protectionVar;
     }
@@ -88,6 +122,10 @@ public abstract class UnitBlueprint extends Blueprint {
         return maxHealth;
     }
 
+    /**
+     * Set max health points for a unit
+     * @param maxHealth New value for max health points
+     */
     public void setMaxHealth(int maxHealth) {
         this.maxHealth = maxHealth;
     }
@@ -101,6 +139,10 @@ public abstract class UnitBlueprint extends Blueprint {
     }
 
 
+    /**
+     * Set range of the unit
+     * @param range New range value for the unit
+     */
     public void setRange(int range) {
         this.range = range;
     }

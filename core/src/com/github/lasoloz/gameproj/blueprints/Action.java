@@ -1,5 +1,9 @@
 package com.github.lasoloz.gameproj.blueprints;
 
+/**
+ * An enum defining different actions for units. Currently `ACT_IDLE` is the
+ * only one in use.
+ */
 public enum Action {
     ACT_IDLE(0),
     ACT_MOVING_NORTH(1),

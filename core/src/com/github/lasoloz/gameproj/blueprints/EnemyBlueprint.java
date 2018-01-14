@@ -3,8 +3,12 @@ package com.github.lasoloz.gameproj.blueprints;
 import com.github.lasoloz.gameproj.graphics.Drawable;
 import com.github.lasoloz.gameproj.graphics.SpriteWrapper;
 
+/**
+ * Blueprint defining enemies, extending `UnitBlueprint`
+ * @see UnitBlueprint
+ */
 public class EnemyBlueprint extends UnitBlueprint {
-    public EnemyBlueprint(SpriteWrapper indexSprite, Drawable idleAnimation) {
+    EnemyBlueprint(SpriteWrapper indexSprite, Drawable idleAnimation) {
         super(indexSprite, idleAnimation);
     }
 
