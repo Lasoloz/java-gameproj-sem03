@@ -1,11 +1,13 @@
 package com.github.lasoloz.gameproj.control.details;
 
+import com.github.lasoloz.gameproj.ui.Updatable;
+
 import java.util.LinkedList;
 
 /**
  * Subject base class - game controlling class with attachable observers
  */
-public abstract class Subject {
+public abstract class Subject implements Updatable {
     private LinkedList<Observer> observers;
     protected GameState gameState;
 
@@ -38,9 +40,11 @@ public abstract class Subject {
     /**
      * Update game state and notify observers.
      */
-    public void update() {
+    @Override
+    public boolean update() {
         for (Observer o : observers) {
             o.update(gameState);
         }
+        return true;
     }
 }

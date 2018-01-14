@@ -39,7 +39,7 @@ public class GameController extends Subject {
 
 
     @Override
-    public void update() {
+    public boolean update() {
         gameState.updateTime();
         gameState.moveCameraTowardsPlayer();
 
@@ -57,6 +57,10 @@ public class GameController extends Subject {
         }
         updateCamera();
         super.update();
+        Vec2i playerPos = gameState.getPlayerPos();
+        return gameState.getMap().getInstance(
+                playerPos.x, playerPos.y
+        ).getHealth() > 0;
     }
 
 
@@ -65,6 +69,7 @@ public class GameController extends Subject {
      * @param width New screen width
      * @param height New screen height
      */
+    @Override
     public void resize(int width, int height) {
         int displayDiv = gameState.getDisplayDiv();
         OrthographicCamera camera = gameState.getCamera();
