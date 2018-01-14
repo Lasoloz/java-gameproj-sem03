@@ -320,6 +320,9 @@ public class UIManager implements InputProcessor, Updatable {
     // InputProcessor methods:
     @Override
     public boolean keyDown(int keycode) {
+        if (keycode == Input.Keys.BACKSPACE && mapPath.length() > 0) {
+            mapPath = mapPath.substring(0, mapPath.length() - 1);
+        }
         return false;
     }
 
@@ -330,6 +333,11 @@ public class UIManager implements InputProcessor, Updatable {
 
     @Override
     public boolean keyTyped(char character) {
+        if ((Character.isLetterOrDigit(character) ||
+                character == '/' || character == '.'
+        ) && mapPath.length() < 25) {
+            mapPath += character;
+        }
         return false;
     }
 
