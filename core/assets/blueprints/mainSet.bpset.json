@@ -66,7 +66,7 @@
       "protection_var": 0
     }
   }, {
-    "type": "gnome",
+    "type": "enemy",
     "name": "Gnome",
     "index": "enemies/gnome/gnome_idle",
     "idle": {
@@ -85,6 +85,16 @@
       "ranged_attack_var": 0,
       "protection_mean": 1,
       "protection_var": 1
+    }
+  }, {
+    "type": "misc",
+    "name": "Stairs",
+    "index": "misc/stairs/stairs",
+    "idle": {
+      "type": "image",
+      "region": "misc/stairs/stairs",
+      "origin_x": 0,
+      "origin_y": 0
     }
   }]
 }

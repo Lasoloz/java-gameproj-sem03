@@ -50,6 +50,8 @@ public class GameState {
     private long time;
     private long startTime;
 
+    private boolean playerWon;
+
 
     private CursorSet cursorSet; // Note! Disposed in main class!
 
@@ -231,6 +233,7 @@ public class GameState {
             playerPos = map.getOriginalPlayerPos();
             cameraPos = getRealPlayerPos();
             currentEnemyPositions = map.getOriginalEnemyPositions();
+            playerWon = false;
             return true;
         } else {
             return false;
@@ -328,5 +331,21 @@ public class GameState {
      */
     public void addEnemyPosition(Vec2i enemyPos) {
         this.currentEnemyPositions.add(enemyPos);
+    }
+
+
+    /**
+     * Set win status to true
+     */
+    public void win() {
+        playerWon = true;
+    }
+
+    /**
+     * Return if player won
+     * @return Win condition
+     */
+    public boolean didPlayerWin() {
+        return playerWon;
     }
 }

@@ -68,6 +68,7 @@ public class GameProj extends ApplicationAdapter {
 //        gameController.detach(fieldRenderer);
         infoRenderer.dispose();
         fieldRenderer.dispose();
+        uiManager.dispose();
 //        cursorSet.dispose();
     }
 }

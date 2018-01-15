@@ -95,6 +95,9 @@ public class UnitLogic {
                 otherTile.removeContent();
                 currentTile.moveContent(otherTile);
                 gameState.getPlayerPos().set(newPos);
+                otherTile.getContent().addLootValue(
+                        otherInstance.getBlueprint().getValue()
+                );
                 return true;
             case ENEMY:
                 // Damage enemy instance
@@ -103,6 +106,12 @@ public class UnitLogic {
                                 getBlueprint().getRandomDamage()
                 );
                 return true;
+            case MISC:
+                if (otherInstance.isExit()) {
+                    gameState.win();
+                    return true;
+                }
+                return false;
             default:
                 return false;
         }

@@ -8,17 +8,15 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.utils.Disposable;
 import com.github.lasoloz.gameproj.control.GameController;
 import com.github.lasoloz.gameproj.control.details.GameState;
 import com.github.lasoloz.gameproj.graphics.CursorSet;
-import com.github.lasoloz.gameproj.graphics.SpriteWrapper;
-import com.github.lasoloz.gameproj.math.Vec2f;
 import com.github.lasoloz.gameproj.math.Vec2i;
 
-public class UIManager implements InputProcessor, Updatable {
+public class UIManager implements InputProcessor, Updatable, Disposable {
     private static int MENUITEM_WIDTH = 600;
     private static int MENUITEM_OFFSET = 110;
     private static int MENUITEM_HEIGHT = 100;
@@ -41,7 +39,8 @@ public class UIManager implements InputProcessor, Updatable {
     private Vec2i mousePos;
     private boolean mouseWasClicked;
 
-    private SpriteWrapper mainBackround;
+    private Texture mainBackground;
+    private Texture loadBackground;
     private BitmapFont font;
     private boolean mainMenu;
 
@@ -70,8 +69,8 @@ public class UIManager implements InputProcessor, Updatable {
         mousePos = new Vec2i(0, 0);
         mouseWasClicked = false;
 
-        Texture bg = new Texture("other/mainBackground.png");
-        mainBackround = new SpriteWrapper(new TextureRegion(bg));
+        mainBackground = new Texture("other/mainBackground.png");
+        loadBackground = new Texture("other/loadBackground.png");
 
         mapPath = "maps/dungeon0.map.json";
 
@@ -116,11 +115,11 @@ public class UIManager implements InputProcessor, Updatable {
             if (mouseWasClicked) {
                 mouseWasClicked = false;
 
-                if (isSelected(-1)) {
+                /*if (isSelected(-1)) {
                     System.out.println(
                             "Generating random dungeon is work in progress!"
                     );
-                } else if (isSelected(0)) {
+                } else */if (isSelected(0)) {
                     mainMenu = false;
                 } else if (isSelected(1)) {
                     System.out.println("Highscores  menu is work in progress!");
@@ -164,11 +163,11 @@ public class UIManager implements InputProcessor, Updatable {
     private void renderMainMenu() {
         uiBatch.begin();
         uiBatch.setProjectionMatrix(uiCamera.combined);
-        mainBackround.draw(uiBatch, new Vec2f(-917f, -462f), 0f);
+        uiBatch.draw(mainBackground, -917f, -462f);
         uiBatch.end();
 
         uiRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        for (int i = -1; i < 2; ++i) {
+        for (int i = -1; i < 1/*2*/; ++i) {
             renderSelection(i);
         }
         uiRenderer.end();
@@ -181,7 +180,7 @@ public class UIManager implements InputProcessor, Updatable {
     private void renderLoadMenu() {
         uiBatch.begin();
         uiBatch.setProjectionMatrix(uiCamera.combined);
-        mainBackround.draw(uiBatch, new Vec2f(-917f,-462f), 0f);
+        uiBatch.draw(loadBackground, -650f, -400);
         uiBatch.end();
 
         uiRenderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -269,12 +268,12 @@ public class UIManager implements InputProcessor, Updatable {
     private void renderMenuTexts() {
         int fontX = -MENUITEM_WIDTH + MENUITEM_PADDING;
         int yOffset = MENUITEM_HEIGHT / 2 + FONT_SIZE / 2 - MENUITEM_PADDING;
-        font.draw(
-                uiBatch,
-                "Create random dungeon (WIP)",
-                fontX,
-                MENUITEM_OFFSET + yOffset
-        );
+//        font.draw(
+//                uiBatch,
+//                "Create random dungeon (WIP)",
+//                fontX,
+//                MENUITEM_OFFSET + yOffset
+//        );
         font.draw(
                 uiBatch,
                 "Load dungeon map",
@@ -369,5 +368,11 @@ public class UIManager implements InputProcessor, Updatable {
     @Override
     public boolean scrolled(int amount) {
         return false;
+    }
+
+
+    @Override public void dispose() {
+        mainBackground.dispose();
+        loadBackground.dispose();
     }
 }

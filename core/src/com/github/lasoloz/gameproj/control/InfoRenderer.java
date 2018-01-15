@@ -33,6 +33,7 @@ public class InfoRenderer implements Observer, Disposable {
     private static final int FONT_SIZE = 22;
     private static final int BORDERS = 4;
     private static final int HEALTH_BAR_THICKNESS = 10;
+    private static final int INFO_PADDING = 4;
 
     /**
      * Constructor
@@ -80,7 +81,7 @@ public class InfoRenderer implements Observer, Disposable {
                 playerInstance.getBlueprint().getMaxHealth()
         );
         // Print player health and loot value:
-//        drawPlayerHealthAndLootValue
+        drawPlayerHealthAndLootValue(gameState);
     }
 
     /**
@@ -120,6 +121,47 @@ public class InfoRenderer implements Observer, Disposable {
         );
 
         shapeRenderer.end();
+    }
+
+    /**
+     * Draw a bor containing information about player
+     * @param gameState Current state of game.
+     */
+    private void drawPlayerHealthAndLootValue(GameState gameState) {
+        Vec2i screenSize = gameState.getScreenSize();
+        int length = screenSize.x - BORDERS * 2;
+        int barBottom = screenSize.y - HEALTH_BAR_THICKNESS - BORDERS
+                - 2 * INFO_PADDING - FONT_SIZE;
+
+        // Draw base rectangles:
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setProjectionMatrix(gameState.getUiCamera().combined);
+        shapeRenderer.setColor(0f, 0f, 0f, .7f);
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        shapeRenderer.rect(
+                BORDERS,
+                barBottom,
+                length,
+                FONT_SIZE + 2 * INFO_PADDING
+        );
+        shapeRenderer.end();
+
+        // Create text information:
+        Vec2i playerPos = gameState.getPlayerPos();
+        Instance playerInstance = gameState.getMap().getInstance(
+                playerPos.x,
+                playerPos.y
+        );
+        String message = "HP: " + playerInstance.getHealth() + "; Loot: " +
+                playerInstance.getLoot();
+        textBatch.begin();
+        font.draw(
+                textBatch,
+                message,
+                BORDERS + INFO_PADDING,
+                barBottom + FONT_SIZE
+        );
+        textBatch.end();
     }
 
     /**

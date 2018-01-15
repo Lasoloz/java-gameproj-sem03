@@ -61,4 +61,28 @@ public class Instance {
     public boolean isStunned() {
         return  false;
     }
+
+
+    /**
+     * Get loot value
+     * @return Numerical value of root
+     */
+    public int getLoot() {
+        return 0;
+    }
+
+    /**
+     * Add loot to overall loot value
+     * @param loot Value to be added to sum of loot values
+     */
+    public void addLootValue(int loot) {}
+
+
+    /**
+     * Check if instance is the exit
+     * @return Boolean value stating if instance is exit
+     */
+    public boolean isExit() {
+        return false;
+    }
 }

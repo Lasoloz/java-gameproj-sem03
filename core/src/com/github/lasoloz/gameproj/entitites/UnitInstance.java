@@ -9,6 +9,7 @@ import com.github.lasoloz.gameproj.blueprints.UnitBlueprint;
 public class UnitInstance extends Instance {
     private int health;
     private int stunned;
+    private int loot;
 
     /**
      * Construct new instance from unit blueprint
@@ -53,5 +54,15 @@ public class UnitInstance extends Instance {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public int getLoot() {
+        return loot;
+    }
+
+    @Override
+    public void addLootValue(int lootValue) {
+        loot += lootValue;
     }
 }

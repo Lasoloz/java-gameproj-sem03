@@ -4,6 +4,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.SerializationException;
 import com.github.lasoloz.gameproj.blueprints.*;
 import com.github.lasoloz.gameproj.graphics.AnimationWrapper;
 import com.github.lasoloz.gameproj.graphics.Drawable;
@@ -39,12 +40,19 @@ public class BlueprintSet {
         }
 
         // Get root from json
-        JsonValue root = new JsonReader().parse(blueprintSetFile);
+        try {
+            JsonValue root = new JsonReader().parse(blueprintSetFile);
+            // Create blueprint list
+            blueprints = new ArrayList<Blueprint>();
+            // Read information from root
+            readRoot(root);
+        } catch (SerializationException ex) {
+            throw new BlueprintException(
+                    "BlueprintSet",
+                    "BlueprintSet file is illegal JSON file!"
+            );
+        }
 
-        // Create blueprint list
-        blueprints = new ArrayList<Blueprint>();
-        // Read information from root
-        readRoot(root);
     }
 
     /**
@@ -80,6 +88,13 @@ public class BlueprintSet {
             throw new BlueprintException(
                     "BlueprintSet",
                     "BlueprintSet JSON file has invalid field(s)!"
+            );
+        } catch (IllegalArgumentException ex) {
+            // Catch `IllegalArgumentException`s and pack them in
+            // `BlueprintException`s
+            throw new BlueprintException(
+                    "BlueprintSet",
+                    "BlueprintSet JSON file has missing field(s)!"
             );
         }
     }

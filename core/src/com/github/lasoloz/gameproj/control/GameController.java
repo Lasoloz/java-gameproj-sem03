@@ -58,7 +58,7 @@ public class GameController extends Subject {
         updateCamera();
         super.update();
         Vec2i playerPos = gameState.getPlayerPos();
-        return gameState.getMap().getInstance(
+        return (!gameState.didPlayerWin()) && gameState.getMap().getInstance(
                 playerPos.x, playerPos.y
         ).getHealth() > 0;
     }
@@ -121,7 +121,7 @@ public class GameController extends Subject {
                 playerPos.x, playerPos.y
         );
         if (player.getHealth() <= 0) {
-//            gameState.defeat();
+            return false;
         }
 
         // Alternative:

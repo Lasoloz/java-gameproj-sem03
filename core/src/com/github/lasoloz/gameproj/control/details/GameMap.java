@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.SerializationException;
 import com.github.lasoloz.gameproj.blueprints.*;
+import com.github.lasoloz.gameproj.entitites.ExitInstance;
 import com.github.lasoloz.gameproj.entitites.Instance;
 import com.github.lasoloz.gameproj.entitites.UnitInstance;
 import com.github.lasoloz.gameproj.graphics.GraphicsException;
@@ -100,6 +101,10 @@ public class GameMap {
             // Catch different exceptions and return them as `false`
             Gdx.app.error("GameMap","Invalid map data (index out of bounds)!");
             return false;
+        } catch (IndexOutOfBoundsException ex) {
+            // Catch different exceptions and return them as `false`
+            Gdx.app.error("GameMap","Invalid map data (index out of bounds)!");
+            return false;
         } catch (GraphicsException ex) {
             // Catch different exceptions and return them as `false`
             Gdx.app.error("GameMap", "Failed to load Terrain Collection!");
@@ -163,7 +168,16 @@ public class GameMap {
                 originalEnemyPositions.add(new Vec2i(posX, posY));
             }
 
-            map[posY][posX].setContent(createInstance(currentBlueprint));
+            Instance newInstance;
+            if (
+                    currentBlueprint.getType() == InstanceType.MISC &&
+                            unitIter.get("exit") != null) {
+                newInstance = createExit(currentBlueprint);
+            } else {
+                newInstance = createInstance(currentBlueprint);
+            }
+
+            map[posY][posX].setContent(newInstance);
 
             unitIter = unitIter.next;
         }
@@ -194,6 +208,10 @@ public class GameMap {
             default:
                 return new Instance(currentBlueprint);
         }
+    }
+
+    private Instance createExit(Blueprint bp) {
+        return new ExitInstance(bp);
     }
 
 
